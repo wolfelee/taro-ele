@@ -206,7 +206,9 @@ const Estimate = ({ userEstimate }) => {
                 </View>
                 <View className='comments-item-content'>
                   <View className='usernametime'>
-                    <View className='username'>{comment.username}</View>
+                    <View className='usernametime-name'>
+                      {comment.username}
+                    </View>
                     <View className='usertime'>{comment.rated_at}</View>
                   </View>
                   <View className='grade'>

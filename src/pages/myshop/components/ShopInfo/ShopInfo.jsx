@@ -31,7 +31,7 @@ const ShopInfo = ({ shopInfo }) => {
   }
   return (
     <View className='shopinfo'>
-      <Card title='配送信息'>
+      <Card>
         <Image className='peisong-img' src={imgUrl(brandStory.header_image)} />
         <View className='peisong-content'>
           <View className='peisong-title'>{brandStory.title}</View>
