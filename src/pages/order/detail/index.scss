@@ -92,6 +92,7 @@
           font-size: 26px;
           > .icon {
             color: #2395ff;
+            font-size: 24px;
           }
         }
         .order-carts-totalprice-text {
@@ -114,6 +115,7 @@
         color: #6e6e6e;
       }
       .order-detail-ty-content {
+        flex: 1;
         color: #6e6e6e;
       }
     }

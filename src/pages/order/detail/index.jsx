@@ -46,8 +46,7 @@ const Detail = () => {
 
   return (
     <View className='order-detail'>
-      {console.log(detailData)}
-      <NavBar title='订单详情' />
+      {process.env.TARO_ENV === 'h5' && <NavBar title='订单详情' />}
       <View className='order-detail-main'>
         <Card className='order-detail-tip'>
           <View className='order-detail-tip-left'>
@@ -67,7 +66,6 @@ const Detail = () => {
               <View className='order-carts-title'>{detailData.shopName}</View>
             </View>
             <View className='order-carts-foods'>
-              {console.log(foods)}
               {foods.map(f => {
                 return (
                   <View className='order-carts-food' key={f.createTime}>

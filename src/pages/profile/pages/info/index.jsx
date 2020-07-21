@@ -1,7 +1,7 @@
 // 个人信息
 import Taro, { useDidShow } from '@tarojs/taro'
 import React, { useState, useEffect } from 'react'
-import { View, Button, Image, Text } from '@tarojs/components'
+import { View, Button, Text } from '@tarojs/components'
 import { useSelector, useDispatch } from 'react-redux'
 import { reqUserInfo } from '@/src/api'
 import { removeToken } from '@/src/redux/actions/user'
@@ -43,7 +43,7 @@ const ProfileInfo = () => {
 
     result &&
       Taro.uploadFile({
-        url: 'http://localhost:4000/api/uploadHead', 
+        url: 'http://localhost:4000/api/uploadHead',
         filePath: result.tempFilePaths[0],
         name: 'head',
         formData: {

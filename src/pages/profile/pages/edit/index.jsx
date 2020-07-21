@@ -23,7 +23,7 @@ const ProfileAddressEdit = () => {
 
   return (
     <View className='edit'>
-      <NavBar title='编辑地址' />
+      {process.env.TARO_ENV === 'h5' && <NavBar title='编辑地址' />}
       <UserAddress userAddress={userAddress} onForm={onForm} />
     </View>
   )

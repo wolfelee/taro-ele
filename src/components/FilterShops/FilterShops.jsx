@@ -256,6 +256,7 @@ const FilterShops = (
           <View className='filter-item'>
             <View className='filter-item-title'>{filter.serve.title}</View>
             <View className='filter-item-main'>
+
               {myFilter.serve.main.map(item => {
                 return (
                   <View

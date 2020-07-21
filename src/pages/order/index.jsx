@@ -2,7 +2,6 @@
 import Taro from '@tarojs/taro'
 import React, { useState, useEffect, useMemo } from 'react'
 import { View } from '@tarojs/components'
-import { Transition } from 'react-spring/renderprops'
 import { getOrder } from '@/src/api'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
 import Ordercard from './components/Ordercard/Ordercard'

@@ -64,7 +64,7 @@ const Clearing = () => {
 
   return (
     <View className='clearing'>
-      <NavBar title='结算' />
+      {process.env.TARO_ENV === 'h5' && <NavBar title='结算' />}
       <CartAddress
         useAddress={currentAddress}
         onSelectAddress={selectAddress}

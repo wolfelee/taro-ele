@@ -1,16 +1,12 @@
 // 首页
-import Taro, { usePageScroll } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { View, ScrollView } from '@tarojs/components'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { reqNavList, reqGetMsiteShopList } from '@/src/api'
 import { initCurrentAddress } from '@/src/redux/actions/user'
-import {
-  actionGetBatchFilter,
-  actionShopParams,
-  actionCategoriesId,
-} from '@/src/redux/actions/filterShop'
+import { actionGetBatchFilter } from '@/src/redux/actions/filterShop'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
 import TipNull from '@/src/components/TipNull/TipNull'
 import FilterShops from '@/src/components/FilterShops/FilterShops'
@@ -76,8 +72,6 @@ const Msite = () => {
     dispatch(initCurrentAddress())
   }, [dispatch])
 
-
-
   // 获取导航数据
   useEffect(() => {
     const { latitude, longitude } = currentAddress
@@ -99,8 +93,8 @@ const Msite = () => {
 
   // 跳转商家列表
   const goFood = navItem => {
-    dispatch(actionCategoriesId(navItem.id))
-    Taro.redirectTo({ url: '/pages/food/index' })
+    const { name, id } = navItem
+    Taro.redirectTo({ url: `/pages/food/index?id=${id}&name=${name}` })
   }
 
   // 获取首页筛选条数据
@@ -215,7 +209,7 @@ const Msite = () => {
         <MsiteAdvertising
           title='品质套餐'
           detail='搭配齐全吃得好'
-          img='https://cube.elemecdn.com/e/ee/df43e7e53f6e1346c3fda0609f1d3png.png'
+          img='https://cube.elemecdn.com/e/ee/df43e7e53f6e1346c3fda0609f1d3png.png?x-oss-process=image/format,webp/resize,w_282,h_188,m_fixed'
           url='/pages/ranking'
         />
 
@@ -244,25 +238,25 @@ const Msite = () => {
           </>
         )}
 
-        {/* 未登录提示登录 */}
-        {!isLogin && (
-          <TipNull
-            img='//fuss10.elemecdn.com/d/60/70008646170d1f654e926a2aaa3afpng.png'
-            title='没有结果'
-            contentText='登录后查看更多商家'
-            buttonText='登录'
-            onButtonClick={goLogin}
-          />
-        )}
-
         {/* 无收货地址 */}
-        {!currentAddress.city && (
+        {!currentAddress.city ? (
           <TipNull
             img='//fuss10.elemecdn.com/2/67/64f199059800f254c47e16495442bgif.gif'
             title='输入地址后才能订餐哦!'
             buttonText='手动选择地址'
             onButtonClick={() => onSetAddressShow(true)}
           />
+        ) : (
+          // 未登录提示登录
+          !isLogin && (
+            <TipNull
+              img='//fuss10.elemecdn.com/d/60/70008646170d1f654e926a2aaa3afpng.png'
+              title='没有结果'
+              contentText='登录后查看更多商家'
+              buttonText='登录'
+              onButtonClick={goLogin}
+            />
+          )
         )}
 
         {/* 选择收货地址 */}

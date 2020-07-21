@@ -301,7 +301,9 @@ const MyShop = () => {
             background: `url(${imgUrl(shopInfo.shop_sign.image_hash)})`,
           }}
         >
-          <View className='icon icon-fanhui' onClick={onBack}></View>
+          {process.env.TARO_ENV === 'h5' && (
+            <View className='icon icon-fanhui' onClick={onBack}></View>
+          )}
         </View>
         <View className='myshop-top-main'>
           <View className='myshop-logo'>

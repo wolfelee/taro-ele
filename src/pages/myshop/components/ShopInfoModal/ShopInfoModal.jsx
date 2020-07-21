@@ -1,4 +1,3 @@
-import Taro from '@tarojs/taro'
 import React from 'react'
 import classnames from 'classnames'
 import { View, Text } from '@tarojs/components'

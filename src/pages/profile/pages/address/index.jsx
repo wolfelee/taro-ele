@@ -18,7 +18,7 @@ const ProfileAddress = () => {
   const dispatch = useDispatch()
   const { userAddressList, currentAddress } = useSelector(state => state)
   const router = useRouter()
-  
+
   // 是否可以选择地址
   const selectFlag = useMemo(() => {
     if (router.params.clearing) {
@@ -86,7 +86,7 @@ const ProfileAddress = () => {
 
   return (
     <View className='profileaddress'>
-      <NavBar title='我的地址' />
+      {process.env.TARO_ENV === 'h5' && <NavBar title='我的地址' />}
       <View className='profileaddress-list'>
         {userAddressList.map(item => {
           return (

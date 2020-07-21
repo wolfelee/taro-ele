@@ -1,5 +1,4 @@
 // 发现
-import Taro from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { View, Image, Text } from '@tarojs/components'

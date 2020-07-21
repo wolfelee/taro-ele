@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState } from 'react'
 import { View, Text, Image, ScrollView, RichText } from '@tarojs/components'
 import classnames from 'classnames'
 import Star from '@/src/components/Star/Star'
@@ -138,7 +138,7 @@ const Estimate = ({ userEstimate }) => {
           <View className='total'>{rating.overall_score}</View>
           <View className='total-xx'>
             <View className='total-xx-title'>商家评分</View>
-            <Star />
+            <Star rating={rating.overall_score} />
           </View>
         </View>
         <View className='rating-right'>

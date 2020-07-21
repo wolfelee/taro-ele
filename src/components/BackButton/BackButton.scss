@@ -1,0 +1,22 @@
+.backbutton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  width: 80px;
+  height: 80px;
+  border: 1px #0085ff solid;
+  background: #fff;
+  border-radius: 50%;
+  > .icon {
+    color: #0085ff;
+    font-size: 45px;
+  }
+
+  .backbutton-text {
+    color: #666;
+    font-size: 24px;
+  }
+}

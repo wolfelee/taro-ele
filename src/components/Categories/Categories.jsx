@@ -13,7 +13,6 @@ const Categories = ({
   activeFoodPage,
   onfoodPage,
   onSetFoodsPage,
-  categoriesId,
   onFilterClear,
   onRemoveOffset,
 }) => {

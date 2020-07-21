@@ -4,7 +4,11 @@ import React, { useState, useRef, useMemo } from 'react'
 import { View, ScrollView } from '@tarojs/components'
 import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserAddressList, setCurrentAddress } from '@/src/redux/actions/user'
+import {
+  getUserAddressList,
+  setCurrentAddress,
+  removeUserAddress,
+} from '@/src/redux/actions/user'
 import { reqAddressDetail } from '@/src/api'
 import NavBar from '@/src/components/NavBar/NavBar'
 
@@ -113,6 +117,7 @@ const SelectAddress = ({
 
   // 跳转到新增地址
   const onAddAddress = () => {
+    dispatch(removeUserAddress())
     Taro.navigateTo({ url: '/pages/profile/pages/add/index' })
   }
 

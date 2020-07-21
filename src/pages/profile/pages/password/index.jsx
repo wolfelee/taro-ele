@@ -1,7 +1,7 @@
 // 修改密码
 import Taro from '@tarojs/taro'
 import React, { useState, useMemo, useCallback } from 'react'
-import { View, Button, Icon } from '@tarojs/components'
+import { View, Button } from '@tarojs/components'
 import { reqSetPassWord } from '@/src/api'
 import MyInput from './components/Input/MyInput'
 

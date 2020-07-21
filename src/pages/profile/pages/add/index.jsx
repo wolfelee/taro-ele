@@ -21,7 +21,7 @@ const AddAddress = () => {
   }
   return (
     <View className='addaddress'>
-      <NavBar title='添加地址' />
+      {process.env.TARO_ENV === 'h5' && <NavBar title='添加地址' />}
       <UserAddress userAddress={userAddress} onForm={onForm} />
     </View>
   )

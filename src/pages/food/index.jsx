@@ -1,21 +1,26 @@
-import Taro from '@tarojs/taro'
+import Taro, { useRouter } from '@tarojs/taro'
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { View, ScrollView } from '@tarojs/components'
-import { reqGetFoodsClass, reqGetFoodsPage, reqGetMsiteShopList } from '@/src/api'
+import {
+  reqGetFoodsClass,
+  reqGetFoodsPage,
+  reqGetMsiteShopList,
+} from '@/src/api'
 import { actionGetBatchFilter } from '@/src/redux/actions/filterShop'
 
 import Categories from '@/src/components/Categories/Categories'
 import FilterShops from '@/src/components/FilterShops/FilterShops'
 import Shop from '@/src/components/Shop/Shop'
 import Loading from '@/src/components/Loading/Loading'
+import BackButton from '@/src/components/BackButton/BackButton'
 
 import './index.scss'
 
 const Food = () => {
+  const router = useRouter()
   const dispatch = useDispatch()
   const currentAddress = useSelector(state => state.currentAddress)
-  let categoriesId = useSelector(state => state.categoriesId)
   // 用户token
   const token = useSelector(state => state.token)
   // 商家列表请求参数
@@ -51,22 +56,26 @@ const Food = () => {
   // 获取头部page,更多class 数据
   useEffect(() => {
     const { latitude, longitude } = currentAddress
-    reqGetFoodsPage({ latitude, longitude, entry_id: categoriesId }).then(
-      res => {
-        if (res.code === 0) {
-          setFoodsPage(res.data)
-          setActiveFoodPage(res.data[0])
+    const { params } = router
+    if (latitude && longitude) {
+      Promise.all([
+        reqGetFoodsPage({ latitude, longitude, entry_id: params.id }),
+        reqGetFoodsClass({ latitude, longitude }),
+      ]).then(resArr => {
+        if (resArr[0].code === 0 && resArr[1].code == 0) {
+          setFoodsPage(resArr[0].data)
+          setActiveFoodPage(resArr[0].data[0])
+          const newData = resArr[1].data.filter(item => item.id)
+          setFoodsClass(newData)
+        } else {
+          Taro.showToast({ title: '请先登录', icon: 'none', duration: 1500 })
+          setTimeout(() => {
+            Taro.redirectTo({ url: '/pages/msite/index' })
+          }, 1500)
         }
-      }
-    )
-
-   reqGetFoodsClass({ latitude, longitude }).then(res => {
-      if (res.code === 0) {
-        const newData = res.data.filter(item => item.id)
-        setFoodsClass(newData)
-      }
-    })
-  }, [currentAddress, categoriesId])
+      })
+    }
+  }, [currentAddress, router])
 
   // 修改当前快捷导航选中分类
   const onfoodPage = food => {
@@ -87,7 +96,7 @@ const Food = () => {
         longitude: currentAddress.longitude,
         ...shopParams,
         offset,
-        id: activeFoodPage.id,
+        id: activeFoodPage && activeFoodPage.id,
       }).then(res => {
         if (res.code === 0) {
           if (offset === 0) {
@@ -157,6 +166,11 @@ const Food = () => {
     onClear()
   }
 
+  // 跳转首页
+  const backMsite = () => {
+    Taro.redirectTo({ url: '/pages/msite/index' })
+  }
+
   return (
     <View className='food'>
       <View className='food-topbar'>
@@ -164,7 +178,6 @@ const Food = () => {
           <Categories
             foodsPage={foodsPage}
             foodsClass={foodsClass}
-            categoriesId={categoriesId}
             onfoodPage={onfoodPage}
             activeFoodPage={activeFoodPage}
             onSetFoodsPage={onSetFoodsPage}
@@ -172,12 +185,14 @@ const Food = () => {
             onFilterClear={filterClear}
           />
         )}
-        <FilterShops
-          ref={clearRef}
-          batchFilter={batchFilter}
-          weSetScroll={weSetScroll}
-          onRemoveOffset={removeOffset}
-        />
+        {batchFilter.filter.serve.main.length > 0 && (
+          <FilterShops
+            ref={clearRef}
+            batchFilter={batchFilter}
+            weSetScroll={weSetScroll}
+            onRemoveOffset={removeOffset}
+          />
+        )}
       </View>
       <ScrollView
         className='food-shoplist'
@@ -191,7 +206,13 @@ const Food = () => {
         })}
         {!isMore && <Loading title='没有更多了...'></Loading>}
       </ScrollView>
-      
+
+      {process.env.TARO_ENV === 'h5' && (
+        <BackButton
+          renderIcon={<View className='icon icon-daohangshouye'></View>}
+          onLink={backMsite}
+        />
+      )}
     </View>
   )
 }

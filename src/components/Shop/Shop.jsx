@@ -1,14 +1,18 @@
 // 商家卡片展示
 import Taro from '@tarojs/taro'
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, memo } from 'react'
 import { View, Image, Text } from '@tarojs/components'
 import classnames from 'classnames'
 import imgUrl from '@/src/utils/imgUrl'
 import distance from '@/src/utils/distance'
-import './Shop.scss'
 import Star from '../Star/Star'
 
+import './Shop.scss'
+
+const oss = '?x-oss-process=image/format,webp/resize,w_130,h_130,m_fixed'
+
 const Shop = ({ restaurant }) => {
+  //显示/隐藏
   const [isHide, setIsHide] = useState(false)
 
   // 显示/隐藏 活动
@@ -35,20 +39,25 @@ const Shop = ({ restaurant }) => {
   }, [isHide])
 
   // 展开活动查看更多
-  const handleUnfold = (e) => {
+  const handleUnfold = e => {
     e.stopPropagation()
     setIsHide(data => !data)
   }
 
   // 跳转商家详情
   const goShop = () => {
-    Taro.navigateTo({ url: '/pages/myshop/index' })
+    const { id } = restaurant
+    Taro.navigateTo({ url: `/pages/myshop/index?id=${id}` })
   }
 
   return (
     <View className='shop' onClick={goShop}>
       <View className='shop-left'>
-        <Image src={imgUrl(restaurant.image_path)} className='shop-left-img' />
+        <Image
+          src={imgUrl(restaurant.image_path) + oss}
+          lazyLoad
+          className='shop-left-img'
+        />
       </View>
       <View className='shop-right'>
         <View className='shop-content'>
@@ -163,4 +172,4 @@ const Shop = ({ restaurant }) => {
   )
 }
 
-export default Shop
+export default memo(Shop)

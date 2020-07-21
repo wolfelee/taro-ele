@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '我的地址',
+  navigationBarTitleText: '添加地址',
 }

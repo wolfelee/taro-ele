@@ -5,7 +5,6 @@ import {
   UPSALES,
   UPFILTER,
   SHOPPARAMS,
-  CATEGORIESPAGE,
 } from '../action-types'
 
 // 获取首页筛选条数据
@@ -86,20 +85,7 @@ const shopParams = (state = initShopParams, action) => {
   }
 }
 
-// 当前选择的商家列表id
-const initCategoriesId = 0
-const categoriesId = (state = initCategoriesId, action) => {
-  const { type, payload } = action
-  switch (type) {
-    case CATEGORIESPAGE:
-      return payload
-    default:
-      return state
-  }
-}
-
 export default {
   batchFilter,
   shopParams,
-  categoriesId,
 }

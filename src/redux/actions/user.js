@@ -68,7 +68,7 @@ const getUserAddressListSync = userAddressList => ({
   payload: userAddressList,
 })
 export const getUserAddressList = () => {
-  return async (dispatch, getState) => {
+  return async dispatch => {
     const result = await reqUserAddress()
     if (result.code === 0) {
       dispatch(getUserAddressListSync(result.data))

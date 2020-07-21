@@ -1,18 +1,18 @@
 .filtershops {
   position: sticky;
+  z-index: 3;
   top: 0;
   background: #fff;
-  z-index: 3;
   .filtershops-head {
     display: flex;
     align-items: center;
-    color: #666666;
     height: 80px;
+    color: #666;
     .filtershops-head-item {
-      flex: 1;
       display: flex;
-      justify-content: center;
       align-items: center;
+      flex: 1;
+      justify-content: center;
       &:last-child {
         flex: none;
         width: 150px;
@@ -31,11 +31,11 @@
 
   .filtershops-sort {
     position: absolute;
-    left: 0;
     right: 0;
-    background: #fff;
+    left: 0;
     padding-left: 30px;
     border-top: 1px #f9f9f9 solid;
+    background: #fff;
     .sort-item {
       padding: 15px 0;
     }
@@ -43,30 +43,31 @@
 
   .filtershops-filter {
     position: absolute;
-    left: 0;
     right: 0;
-    background: #fff;
+    left: 0;
     border-top: 1px #f9f9f9 solid;
+    background: #fff;
     .filter-item {
       padding: 0 20px;
       .filter-item-title {
-        color: #666666;
-        font-size: 24px;
         padding: 10px 0 10px 10px;
+        color: #666;
+        font-size: 24px;
       }
       .filter-item-main {
         display: flex;
         flex-wrap: wrap;
         .filter-item-main-item {
-          background: #fafafa;
           display: flex;
-          flex: 0 0 30.5%;
-          margin: 5px 10px 5px 10px;
-          padding: 5px 0;
-          justify-content: center;
           align-items: center;
-          color: #333333;
+          flex: 0 0 30.5%;
+          justify-content: center;
+          margin: 5px 10px 5px 10px;
+          padding: 15px 0;
+          background: #fafafa;
+          color: #333;
           font-size: 26px;
+          line-height: 1.2;
           .filter-item-main-item-icon {
             padding: 0 8px;
             .filter-item-main-item-icon-img {
@@ -78,9 +79,9 @@
           }
         }
         .filter-active {
+          background: #edf5ff;
           color: #3190e8;
           font-weight: 600;
-          background: #edf5ff;
         }
       }
     }
@@ -91,18 +92,18 @@
       box-shadow: 0 -4px 4px 0 #ededed;
       .ressub-reset,
       .ressub-submit {
-        flex: 1;
         display: flex;
-        justify-content: center;
         align-items: center;
         align-self: center;
+        flex: 1;
+        justify-content: center;
         height: 100%;
       }
       .reset-active {
         color: #333 !important;
       }
       .ressub-reset {
-        color: #dddddd;
+        color: #ddd;
       }
       .ressub-submit {
         background: #00d15f;
@@ -111,7 +112,7 @@
     }
   }
   .active {
-    color: #333333;
+    color: #333;
     font-weight: 600;
   }
   .atactive {
@@ -122,11 +123,12 @@
 
 .shade {
   position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
   z-index: 2;
-  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, .5);
+
   backdrop-filter: blur(8px);
 }

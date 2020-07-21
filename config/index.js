@@ -62,7 +62,7 @@ const config = {
       },
     },
     router: {
-      mode: 'browser', // 或者是 'hash'
+      mode: 'browser', //  browser 或 'hash'
     },
   },
 }
