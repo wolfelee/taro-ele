@@ -1,13 +1,12 @@
 import React from 'react'
-import { View, Image } from '@tarojs/components'
+import { View } from '@tarojs/components'
 
 import './BackButton.scss'
 
-const BackButton = ({ renderIcon, onLink, text = '返回' }) => {
+const BackButton = ({ renderIcon, onLink }) => {
   return (
     <View className='backbutton' onClick={onLink}>
       {renderIcon}
-      {/* <View className='backbutton-text'>{text}</View> */}
     </View>
   )
 }

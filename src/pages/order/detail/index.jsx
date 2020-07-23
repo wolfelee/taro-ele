@@ -18,7 +18,7 @@ const Detail = () => {
     getOrderDetail({ id }).then(res => {
       if (res.code === 0) {
         setDetailData(res.data)
-      } else if (res.code === 5) {
+      } else if (res.code === 401) {
         Taro.redirectTo({ url: '/pages/order/index' })
       }
     })

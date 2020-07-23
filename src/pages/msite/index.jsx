@@ -239,24 +239,23 @@ const Msite = () => {
         )}
 
         {/* 无收货地址 */}
-        {!currentAddress.city ? (
+        {!currentAddress.city && (
           <TipNull
             img='//fuss10.elemecdn.com/2/67/64f199059800f254c47e16495442bgif.gif'
             title='输入地址后才能订餐哦!'
             buttonText='手动选择地址'
             onButtonClick={() => onSetAddressShow(true)}
           />
-        ) : (
-          // 未登录提示登录
-          !isLogin && (
-            <TipNull
-              img='//fuss10.elemecdn.com/d/60/70008646170d1f654e926a2aaa3afpng.png'
-              title='没有结果'
-              contentText='登录后查看更多商家'
-              buttonText='登录'
-              onButtonClick={goLogin}
-            />
-          )
+        )}
+        {/* 未登录提示登录*/}
+        {!isLogin && currentAddress.city && (
+          <TipNull
+            img='//fuss10.elemecdn.com/d/60/70008646170d1f654e926a2aaa3afpng.png'
+            title='没有结果'
+            contentText='登录后查看更多商家'
+            buttonText='登录'
+            onButtonClick={goLogin}
+          />
         )}
 
         {/* 选择收货地址 */}
@@ -288,3 +287,5 @@ Msite.defaultProps = {
 }
 
 export default Msite
+
+// hostContentNodes = NodeList(3) [comment, taro-view-core.msite-main, text], node = #comment {s-cn: true, data: "", length: 0, previousElementSibling:

@@ -72,7 +72,7 @@ export const getUserAddressList = () => {
     const result = await reqUserAddress()
     if (result.code === 0) {
       dispatch(getUserAddressListSync(result.data))
-    } else if (result.code === 5) {
+    } else if (result.code === 401) {
       dispatch(removeToken())
     }
   }

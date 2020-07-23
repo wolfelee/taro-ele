@@ -6,6 +6,7 @@ if (process.env.TARO_ENV === 'h5') {
 } else if (process.env.TARO_ENV === 'weapp') {
   BASEURL = 'http://localhost:4000/api'
 }
+
 // 获取ip地址
 export const reqIpAddress = () =>
   ajax(BASEURL + '/ip', {

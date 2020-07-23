@@ -2,25 +2,21 @@ import Taro, { request, showLoading, hideLoading } from '@tarojs/taro'
 
 // 初始请求次数
 let reqNum = 0
-const ajax = (url, data = {}, method, param) => {
+const ajax = (url, data = {}, method = 'GET', params) => {
   showLoading({ title: '加载中...', mask: true })
   // 请求次数递增
   reqNum++
 
   // 判断请求类型
-  let contentType = 'application/json'
-  if (method === 'POST') {
+  let contentType
+  if (method === 'GET') {
+    contentType = 'application/json'
+  } else if (method === 'POST') {
     contentType = 'application/x-www-form-urlencoded'
   }
 
   // 用户token令牌
-  let token = Taro.getStorageSync('token') || ''
-  let Authorization
-  if (token) {
-    Authorization = {
-      Authorization: token,
-    }
-  }
+  let Authorization = Taro.getStorageSync('token') || ''
 
   return new Promise(resolve => {
     request({
@@ -28,10 +24,10 @@ const ajax = (url, data = {}, method, param) => {
       data,
       header: {
         'content-type': contentType,
-        ...Authorization,
+        Authorization,
       },
       method,
-      ...param,
+      ...params,
       // 成功回调
       success(res) {
         resolve(res.data)
@@ -46,7 +42,7 @@ const ajax = (url, data = {}, method, param) => {
           Taro.removeStorageSync('token')
         } else {
           resolve({
-            code: 6,
+            code: 500,
             message: '服务器繁忙',
           })
         }
