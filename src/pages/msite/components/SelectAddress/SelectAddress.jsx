@@ -9,7 +9,7 @@ import {
   setCurrentAddress,
   removeUserAddress,
 } from '@/src/redux/actions/user'
-import { reqAddressDetail } from '@/src/api'
+import ajax from '@/src/api'
 import NavBar from '@/src/components/NavBar/NavBar'
 
 import SelectAddressSearch from '../SelectAddressSearch/SelectAddressSearch'
@@ -54,7 +54,7 @@ const SelectAddress = ({
   // 发送请求获取详细地址
   const getDetila = async value => {
     const { latitude, longitude } = currentAddress
-    const resultDetail = await reqAddressDetail({
+    const [err, result] = await ajax.reqAddressDetail({
       keyword: value,
       offset: 0,
       limit: 20,
@@ -62,10 +62,16 @@ const SelectAddress = ({
       longitude,
     })
 
-    if (resultDetail.code === 0) {
-      setDetailList(resultDetail.data)
+    if (err) {
+      console.log(err)
+      return
+    }
+    
+    if (result.code === 0) {
+      setDetailList(result.data)
     } else {
-      Taro.showToast({ title: resultDetail.message, icon: 'none' })
+      console.log(result)
+      Taro.showToast({ title: result.message, icon: 'none' })
     }
   }
 

@@ -4,7 +4,7 @@ import { View, Text, Image, ScrollView, RichText } from '@tarojs/components'
 import classnames from 'classnames'
 import Star from '@/src/components/Star/Star'
 import imgUrl from '@/src/utils/imgUrl'
-import { reqRatings } from '@/src/api'
+import ajax from '@/src/api'
 
 import defaultHead from '@/src/assets/images/default-head.png'
 import './Estimate.scss'
@@ -71,20 +71,28 @@ const Estimate = ({ userEstimate }) => {
     pavtiveContent
   ) => {
     if (pisMore) {
-      const res = await reqRatings({
+      const [err, result] = await ajax.reqRatings({
         name: pactiveTagName,
         offset: poffset,
         limit: limit,
         has_content: pavtiveContent,
       })
-      if (res.code === 0) {
-        if (res.data.length > 0) {
+      
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      if (result.code === 0) {
+        if (result.data.length > 0) {
           setOffset(count => count + limit)
-          setCommentsList(list => [...list, ...res.data])
+          setCommentsList(list => [...list, ...result.data])
         } else {
           setIsMore(false)
           Taro.showToast({ title: '没有更多了', icon: 'none', mask: true })
         }
+      } else {
+        console.log(result)
       }
     }
   }

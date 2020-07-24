@@ -5,11 +5,11 @@
 //   overflow-y: hidden;
 // }
 .msite {
-  height: 100vh;
+  min-height: 100vh;
 
   -webkit-overflow-scrolling: touch; //ios不流畅问题
   .msite-main {
-    margin-bottom: 130px;
+    padding-bottom: 130px;
     .list-title {
       display: flex;
       align-items: center;

@@ -4,7 +4,7 @@ import { View } from '@tarojs/components'
 import classnames from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentAddress } from '@/src/redux/actions/user'
-import { reqCityList } from '@/src/api'
+import ajax from '@/src/api'
 import NavBar from '@/src/components/NavBar/NavBar'
 import SelectCitySearch from '../SelectCitySearch/SelectCitySearch'
 import SelectCityABC from '../SelectCityABC/SelectCityABC'
@@ -36,7 +36,13 @@ const SelectCity = props => {
 
   // 发送请求
   const getCity = useCallback(async () => {
-    const result = await reqCityList()
+    const [err, result] = await ajax.reqCityList()
+    
+    if (err) {
+      console.log(err)
+      return
+    }
+
     if (result.code === 0) {
       // 创建时间戳 十分钟
       const now = Date.now() + 1000 * 60 * 10
@@ -47,6 +53,7 @@ const SelectCity = props => {
       })
       _cityList(result)
     } else {
+      console.log(result)
       Taro.showToast({ title: result.message, icon: 'none' })
     }
   }, [])
@@ -139,7 +146,7 @@ const SelectCity = props => {
             const result = res[0].map(item => item.top - 95)
             setCityTop(result.splice(1))
           })
-        }, 0) 
+        }, 0)
       } else {
         let offsetTopList = []
         const list = document.querySelectorAll('.dom')

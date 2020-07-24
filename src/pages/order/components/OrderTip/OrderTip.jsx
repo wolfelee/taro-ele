@@ -18,7 +18,7 @@ const OrderTip = ({ isLogin, orderDatas }) => {
 
   return (
     <View className='order-tip'>
-      <Image className='order-tip-img' src={scrimg} />
+      <Image mode='widthFix' className='order-tip-img' src={scrimg} />
       {!isLogin && (
         <>
           <View className='order-tip-title'>登录后查看外卖订单</View>
@@ -36,5 +36,3 @@ const OrderTip = ({ isLogin, orderDatas }) => {
 
 export default OrderTip
 
-//fuss10.elemecdn.com/d/60/70008646170d1f654e926a2aaa3afpng.png
-//fuss10.elemecdn.com/8/c8/bbe5984003cb26fc7b445a4a15195png.png

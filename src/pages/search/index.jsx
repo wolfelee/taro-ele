@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
 import { View } from '@tarojs/components'
-import { reqHotSearchWords, reqTypeaHead } from '@/src/api'
+import ajax from '@/src/api'
 import { useSelector } from 'react-redux'
 import Back from './components/Back/Back'
 import SearchBar from './components/SearchBar/SearchBar'
@@ -24,11 +24,29 @@ const Search = () => {
   const { latitude, longitude } = useSelector(data => data.currentAddress)
   useEffect(() => {
     if (latitude && longitude) {
-      reqHotSearchWords({ latitude, longitude }).then(res => {
-        if (res.code === 0) {
-          setHotList(res.data)
+      ajax.reqHotSearchWords({ latitude, longitude }).then(([err, result]) => {
+        if (err) {
+          if (err.name === '401') {
+            console.log(err)
+            Taro.showToast({
+              title: '请先登录',
+              icon: 'none',
+              duration: 1000,
+              success() {
+                setTimeout(() => {
+                  Taro.redirectTo({ url: '/pages/msite/index' })
+                }, 1000)
+              },
+            })
+            return
+          }
+          return
+        }
+
+        if (result.code === 0) {
+          setHotList(result.data)
         } else {
-          Taro.redirectTo({ url: '/pages/login/index' })
+          console.log(result)
         }
       })
     }
@@ -58,9 +76,16 @@ const Search = () => {
   // 请求搜索结果
   const typeaHead = value => {
     if (value.trim()) {
-      reqTypeaHead(value).then(res => {
-        if (res.code === 0) {
-          setSearchData(res.data)
+      ajax.reqTypeaHead(value).then(([err, result]) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+
+        if (result.code === 0) {
+          setSearchData(result.data)
+        } else {
+          console.log(result)
         }
       })
       setKeyWord(value)
@@ -129,7 +154,9 @@ const Search = () => {
               onTypeaHead={typeaHead}
             />
           )}
-          <Back title='热门搜索' dataList={hotList} onTypeaHead={typeaHead} />
+          {hotList.length > 0 && (
+            <Back title='热门搜索' dataList={hotList} onTypeaHead={typeaHead} />
+          )}
         </>
       )}
     </View>

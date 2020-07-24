@@ -2,7 +2,7 @@
 import Taro from '@tarojs/taro'
 import React, { useState } from 'react'
 import { View, Input, Button } from '@tarojs/components'
-import { reqSetUserName } from '@/src/api'
+import ajax from '@/src/api'
 import './index.scss'
 
 const UserName = () => {
@@ -26,10 +26,17 @@ const UserName = () => {
       return
     }
 
-    const result = await reqSetUserName({ userName })
+    const [err, result] = await ajax.reqSetUserName({ userName })
+
+    if (err) {
+      console.log(err)
+      return
+    }
+    
     if (result.code === 0) {
       Taro.navigateBack({ delta: 1 })
     } else {
+      console.log(result)
       Taro.showToast({ title: result.message, icon: 'none' })
     }
   }

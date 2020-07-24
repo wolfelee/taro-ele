@@ -2,7 +2,7 @@
 import Taro from '@tarojs/taro'
 import React, { useState, useEffect, useMemo } from 'react'
 import { View } from '@tarojs/components'
-import { getOrder } from '@/src/api'
+import ajax from '@/src/api'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
 import Ordercard from './components/Ordercard/Ordercard'
 import OrderTip from './components/OrderTip/OrderTip'
@@ -16,10 +16,18 @@ const Order = () => {
   const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    getOrder().then(res => {
-      if (res.code === 0) {
-        setOrderDatas(res.data)
+    ajax.getOrder().then(([err, result]) => {
+      
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      if (result.code === 0) {
+        setOrderDatas(result.data)
         setIsLogin(true)
+      } else {
+        console.log(result)
       }
     })
   }, [])

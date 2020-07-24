@@ -10,7 +10,7 @@ import {
   Navigator,
 } from '@tarojs/components'
 import classnames from 'classnames'
-import { reqRegister } from '@/src/api'
+import ajax from '@/src/api'
 
 import './index.scss'
 
@@ -73,11 +73,16 @@ const Register = () => {
   // 注册
   const handleSubmit = useCallback(async () => {
     if (comparePassWord && verifyPhone) {
-      const result = await reqRegister({
+      const [err, result] = await ajax.reqRegister({
         phone,
         password,
         password2,
       })
+
+      if (err) {
+        console.log(err)
+        return
+      }
 
       if (result.code === 0) {
         Taro.showLoading({
@@ -91,6 +96,7 @@ const Register = () => {
           },
         })
       } else {
+        console.log(result)
         Taro.showToast({ title: result.message, icon: 'none' })
       }
     } else {

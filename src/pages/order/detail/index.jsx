@@ -1,7 +1,7 @@
 import Taro, { useRouter } from '@tarojs/taro'
 import React, { useEffect, useState, useMemo } from 'react'
 import { View, Text, Image } from '@tarojs/components'
-import { getOrderDetail } from '@/src/api'
+import ajax from '@/src/api'
 import NavBar from '@/src/components/NavBar/NavBar'
 import Card from '@/src/components/Card/Card'
 import imgUrl from '@/src/utils/imgUrl'
@@ -15,11 +15,17 @@ const Detail = () => {
 
   useEffect(() => {
     const { id } = router.params
-    getOrderDetail({ id }).then(res => {
-      if (res.code === 0) {
-        setDetailData(res.data)
-      } else if (res.code === 401) {
-        Taro.redirectTo({ url: '/pages/order/index' })
+    ajax.getOrderDetail({ id }).then(([err, result]) => {
+      if (err) {
+        if (err.name === '401') {
+          return Taro.redirectTo({ url: '/pages/order/index' })
+        }
+        return
+      }
+      if (result.code === 0) {
+        setDetailData(result.data)
+      } else {
+        console.log(result)
       }
     })
   }, [router])
@@ -66,9 +72,9 @@ const Detail = () => {
               <View className='order-carts-title'>{detailData.shopName}</View>
             </View>
             <View className='order-carts-foods'>
-              {foods.map(f => {
+              {foods.map((f, index) => {
                 return (
-                  <View className='order-carts-food' key={f.createTime}>
+                  <View className='order-carts-food' key={'detailfood' + index}>
                     <View className='order-carts-food-name'>{f.name}</View>
                     <View className='order-carts-food-count'>x{f.count}</View>
                     <View className='order-carts-food-totalprice'>

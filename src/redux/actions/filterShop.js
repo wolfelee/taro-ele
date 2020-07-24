@@ -1,4 +1,4 @@
-import { reqGetBatchFilter } from '@/src/api'
+import ajax from '@/src/api'
 import {
   BATCHFILTER,
   UPNAVSORT,
@@ -15,9 +15,18 @@ const actionGetBatchFilterSync = batchFilter => ({
 // 获取筛选条所有数据
 export const actionGetBatchFilter = parmas => {
   return async dispatch => {
-    const result = await reqGetBatchFilter(parmas)
+    const [err, result] = await ajax.reqGetBatchFilter(parmas)
+    if (err) {
+      if (err.name === '401') {
+        console.log(err)
+        return
+      }
+      return
+    }
     if (result.code === 0) {
       dispatch(actionGetBatchFilterSync(result.data))
+    } else {
+      // console.log(result)
     }
   }
 }
@@ -45,5 +54,3 @@ export const actionShopParams = params => ({
   type: SHOPPARAMS,
   payload: params,
 })
-
-

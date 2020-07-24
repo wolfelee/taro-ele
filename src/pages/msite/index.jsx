@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { View, ScrollView } from '@tarojs/components'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { reqNavList, reqGetMsiteShopList } from '@/src/api'
+import ajax from '@/src/api'
 import { initCurrentAddress } from '@/src/redux/actions/user'
 import { actionGetBatchFilter } from '@/src/redux/actions/filterShop'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
@@ -76,11 +76,17 @@ const Msite = () => {
   useEffect(() => {
     const { latitude, longitude } = currentAddress
     if (latitude && longitude) {
-      reqNavList({ latitude, longitude }).then(res => {
-        if (res.code === 0) {
-          setNavList(res.data)
+      ajax.reqNavList({ latitude, longitude }).then(([err, result]) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+
+        if (result.code === 0) {
+          setNavList(result.data)
         } else {
-          Taro.showToast({ title: res.message, icon: 'none' })
+          console.log(result)
+          Taro.showToast({ title: result.message, icon: 'none' })
         }
       })
     }
@@ -154,26 +160,36 @@ const Msite = () => {
   // 获取商家列表
   useEffect(() => {
     if (isLogin && isMore) {
-      reqGetMsiteShopList({
-        latitude: currentAddress.latitude,
-        longitude: currentAddress.longitude,
-        ...shopParams,
-        offset,
-      }).then(res => {
-        if (res.code === 0) {
-          if (offset === 0) {
-            setShopList(res.data)
-          } else {
-            if (res.data.length) {
-              setShopList(data => [...data, ...res.data])
-            } else {
-              // Taro.showToast({ title: '没有更多了', icon: 'none' })
-              setIsMore(false)
-            }
+      ajax
+        .reqGetMsiteShopList({
+          latitude: currentAddress.latitude,
+          longitude: currentAddress.longitude,
+          ...shopParams,
+          offset,
+        })
+        .then(([err, result]) => {
+          
+          if (err) {
+            console.log(err)
+            return
           }
-          setBottomFlag(true)
-        }
-      })
+
+          if (result.code === 0) {
+            if (offset === 0) {
+              setShopList(result.data)
+            } else {
+              if (result.data.length) {
+                setShopList(data => [...data, ...result.data])
+              } else {
+                // Taro.showToast({ title: '没有更多了', icon: 'none' })
+                setIsMore(false)
+              }
+            }
+            setBottomFlag(true)
+          } else {
+            console.log(result)
+          }
+        })
     }
   }, [isLogin, shopParams, currentAddress, offset, isMore])
 

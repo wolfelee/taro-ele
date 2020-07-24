@@ -2,11 +2,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { View, ScrollView } from '@tarojs/components'
-import {
-  reqGetFoodsClass,
-  reqGetFoodsPage,
-  reqGetMsiteShopList,
-} from '@/src/api'
+import ajax from '@/src/api'
 import { actionGetBatchFilter } from '@/src/redux/actions/filterShop'
 
 import Categories from '@/src/components/Categories/Categories'
@@ -59,19 +55,30 @@ const Food = () => {
     const { params } = router
     if (latitude && longitude) {
       Promise.all([
-        reqGetFoodsPage({ latitude, longitude, entry_id: params.id }),
-        reqGetFoodsClass({ latitude, longitude }),
+        ajax.reqGetFoodsPage({ latitude, longitude, entry_id: params.id }),
+        ajax.reqGetFoodsClass({ latitude, longitude }),
       ]).then(resArr => {
-        if (resArr[0].code === 0 && resArr[1].code == 0) {
-          setFoodsPage(resArr[0].data)
-          setActiveFoodPage(resArr[0].data[0])
-          const newData = resArr[1].data.filter(item => item.id)
-          setFoodsClass(newData)
-        } else {
+        const [resFoodsPages, resFoodsClass] = resArr
+        const [foodsPagesErr, foodsPagesData] = resFoodsPages
+        const [foodsClassErr, foodsClassData] = resFoodsClass
+
+        if (foodsPagesErr.name === '401' || foodsClassErr.name === '401') {
           Taro.showToast({ title: '请先登录', icon: 'none', duration: 1500 })
           setTimeout(() => {
             Taro.redirectTo({ url: '/pages/msite/index' })
           }, 1500)
+
+          return
+        }
+
+        if (foodsPagesData.code === 0) {
+          setFoodsPage(foodsPagesData.data)
+          setActiveFoodPage(foodsPagesData.data[0])
+        }
+
+        if (foodsClassData.code === 0) {
+          const newData = foodsClassData.data.filter(item => item.id)
+          setFoodsClass(newData)
         }
       })
     }
@@ -91,27 +98,37 @@ const Food = () => {
   // 获取商家列表
   useEffect(() => {
     if (isLogin && isMore) {
-      reqGetMsiteShopList({
-        latitude: currentAddress.latitude,
-        longitude: currentAddress.longitude,
-        ...shopParams,
-        offset,
-        id: activeFoodPage && activeFoodPage.id,
-      }).then(res => {
-        if (res.code === 0) {
-          if (offset === 0) {
-            setShopList(res.data)
-          } else {
-            if (res.data.length) {
-              setShopList(data => [...data, ...res.data])
-            } else {
-              // Taro.showToast({ title: '没有更多了', icon: 'none' })
-              setIsMore(false)
-            }
+      ajax
+        .reqGetMsiteShopList({
+          latitude: currentAddress.latitude,
+          longitude: currentAddress.longitude,
+          ...shopParams,
+          offset,
+          id: activeFoodPage && activeFoodPage.id,
+        })
+        .then(([err, result]) => {
+          
+          if (err) {
+            console.log(err)
+            return
           }
-          setBottomFlag(true)
-        }
-      })
+
+          if (result.code === 0) {
+            if (offset === 0) {
+              setShopList(result.data)
+            } else {
+              if (result.data.length) {
+                setShopList(data => [...data, ...result.data])
+              } else {
+                // Taro.showToast({ title: '没有更多了', icon: 'none' })
+                setIsMore(false)
+              }
+            }
+            setBottomFlag(true)
+          } else {
+            console.log(result)
+          }
+        })
     }
   }, [isLogin, shopParams, currentAddress, offset, activeFoodPage, isMore])
 

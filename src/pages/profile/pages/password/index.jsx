@@ -2,7 +2,7 @@
 import Taro from '@tarojs/taro'
 import React, { useState, useMemo, useCallback } from 'react'
 import { View, Button } from '@tarojs/components'
-import { reqSetPassWord } from '@/src/api'
+import ajax from '@/src/api'
 import MyInput from './components/Input/MyInput'
 
 import './index.scss'
@@ -68,18 +68,23 @@ const PassWord = () => {
       oldPassWord: oldPassWord,
       newPassWord: newPassWord1,
     }
-    const result = await reqSetPassWord(params)
-    const { code, message } = result
-    if (code === 0) {
+    const [err, result] = await ajax.reqSetPassWord(params)
+
+    if (err) {
+      console.log(err)
+      return
+    }
+
+    if (result.code === 0) {
       Taro.showToast({
-        title: message,
+        title: result.message,
         icon: 'success',
         success() {
           Taro.navigateBack({ delta: 1 })
         },
       })
     } else {
-      Taro.showToast({ title: message, icon: 'none' })
+      Taro.showToast({ title: result.message, icon: 'none' })
     }
   }, [oldPassWord, newPassWord1, flag])
 

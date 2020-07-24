@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import React, { useEffect, useState, useCallback } from 'react'
 import { View, Image, Text, ScrollView } from '@tarojs/components'
 
-import { reqGetShop, reqEstimate } from '@/src/api'
+import ajax from '@/src/api'
 import imgUrl from '@/src/utils/imgUrl'
 import Tabs from '@/src/components/Tabs/Tabs'
 import defaultShopImg from '@/src/assets/images/default-shop.svg'
@@ -72,16 +72,29 @@ const MyShop = () => {
   // 发送请求
   useEffect(() => {
     // 发送请求获取 商家信息 , 商家评论
-    Promise.all([reqGetShop(), reqEstimate()]).then(dataArr => {
-      if (dataArr[0].code === 0 && dataArr[1].code === 0) {
-        setGoods(dataArr[0].data.menu)
-        setShopInfo(dataArr[0].data.rst)
-        setRecommend(dataArr[0].data.recommend[0])
-        intervalFoods(dataArr[0].data.menu)
-        setUserEstimate(dataArr[1].data)
+    Promise.all([ajax.reqGetShop(), ajax.reqEstimate()]).then(dataArr => {
+      const [shop, estimate] = dataArr
+      const [shopErr, shopData] = shop
+      const [estimateErr, estimateData] = estimate
+
+      if (shopData.code === 0) {
+        setGoods(shopData.data.menu)
+        setShopInfo(shopData.data.rst)
+        setRecommend(shopData.data.recommend[0])
+        intervalFoods(shopData.data.menu)
+      } else {
+        console.log(shopData)
+      }
+
+      if (estimateData.code === 0) {
+        setUserEstimate(estimateData.data)
         initRightScrollTop()
         setIsOk(true)
       } else {
+        console.log(estimateData)
+      }
+
+      if (shopData.code !== 0 || estimateData.code !== 0) {
         Taro.redirectTo({ url: '/pages/msite/index' })
       }
     })

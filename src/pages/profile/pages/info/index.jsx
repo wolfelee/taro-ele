@@ -3,7 +3,7 @@ import Taro, { useDidShow } from '@tarojs/taro'
 import React, { useState, useEffect } from 'react'
 import { View, Button, Text } from '@tarojs/components'
 import { useSelector, useDispatch } from 'react-redux'
-import { reqUserInfo } from '@/src/api'
+import ajax from '@/src/api'
 import { removeToken } from '@/src/redux/actions/user'
 import Row from '@/src/components/Row/Row'
 import defaultHead from '../../../../assets/images/default-head.png'
@@ -22,10 +22,19 @@ const ProfileInfo = () => {
 
   // 获取用户信息
   const getUserInfo = async () => {
-    const result = await reqUserInfo()
+    const [err, result] = await ajax.reqUserInfo()
+
+    if (err) {
+      if (err.name === '401') {
+        console.log(err)
+        return
+      }
+    }
+
     if (result.code === 0) {
       setUserInfo(result.data)
     } else {
+      console.log(result)
       Taro.showToast({ title: result.message, icon: 'none' })
     }
   }

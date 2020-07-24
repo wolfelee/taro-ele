@@ -3,7 +3,7 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { View } from '@tarojs/components'
 import NavBar from '@/src/components/NavBar/NavBar'
-import { reqPay } from '@/src/api'
+import ajax from '@/src/api'
 import CartAddress from './components/CartAddress/CartAddress'
 import Distribution from './components/Distribution/Distribution'
 import CartInfo from './components/CartInfo/CartInfo'
@@ -43,7 +43,11 @@ const Clearing = () => {
         address: currentAddress,
       }
       setPayLoading(true)
-      const result = await reqPay(body)
+      const [err, result] = await ajax.reqPay(body)
+      if (err) {
+        console.log(err)
+        return
+      }
       if (result.code === 0) {
         setPayLoading(false)
         Taro.showToast({
@@ -56,6 +60,8 @@ const Clearing = () => {
             }, 1500)
           },
         })
+      } else {
+        console.log(result)
       }
     } else {
       Taro.showToast({ title: '请选择收货地址', icon: 'none', duration: 1500 })

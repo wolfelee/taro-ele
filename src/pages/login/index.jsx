@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from 'react'
 import { View, Image, Form, Input, Button, Navigator } from '@tarojs/components'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
-import { reqLogin } from '@/src/api'
+import ajax from '@/src/api'
 import { setToken } from '@/src/redux/actions/user'
 import './index.scss'
 
@@ -45,13 +45,18 @@ const Login = () => {
   // 登录
   const handleSubmit = useCallback(async () => {
     if (verifyPhone && password.length >= 6) {
-      const result = await reqLogin({
+      const [err, result] = await ajax.reqLogin({
         phone,
         password,
       })
-      const { code, message, token } = result
-      if (code === 0) {
-        dispatch(setToken(token))
+
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      if (result.code === 0) {
+        dispatch(setToken(result.token))
         Taro.showLoading({
           title: '登录成功',
           mask: true,
@@ -63,7 +68,8 @@ const Login = () => {
           },
         })
       } else {
-        Taro.showToast({ title: message, icon: 'none' })
+        console.log(result)
+        Taro.showToast({ title: result.message, icon: 'none' })
       }
       return
     }

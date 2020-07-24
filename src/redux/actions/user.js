@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { reqUserAddress, reqIpAddress } from '@/src/api'
+import ajax from '@/src/api'
 import {
   USERADDRESS,
   SETUSERADDRESS,
@@ -31,7 +31,13 @@ export const setCurrentAddress = address => ({
 // 初始化ip定位地址
 export const initCurrentAddress = () => {
   return async dispatch => {
-    const result = await reqIpAddress()
+    const [err, result] = await ajax.reqIpAddress()
+
+    if (err) {
+      console.log(err)
+      return
+    }
+
     if (result.code === 0) {
       const { city, latitude, longitude, recommend } = result.data
       // 保存地址到redux
@@ -43,6 +49,8 @@ export const initCurrentAddress = () => {
           longitude,
         })
       )
+    } else {
+      // console.log(result)
     }
   }
 }
@@ -69,11 +77,20 @@ const getUserAddressListSync = userAddressList => ({
 })
 export const getUserAddressList = () => {
   return async dispatch => {
-    const result = await reqUserAddress()
+    const [err, result] = await ajax.reqUserAddress()
+
+    if (err) {
+      if (err.name === '401') {
+        dispatch(removeToken())
+        return
+      }
+      return
+    }
+
     if (result.code === 0) {
       dispatch(getUserAddressListSync(result.data))
-    } else if (result.code === 401) {
-      dispatch(removeToken())
+    } else {
+      // console.log(result)
     }
   }
 }

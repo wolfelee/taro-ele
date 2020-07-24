@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { View, Image, Text } from '@tarojs/components'
-import { reqSuggest, reqDiscover } from '@/src/api'
+import ajax from '@/src/api'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
 import imgUrl from '@/src/utils/imgUrl'
 import Prize from './components/Prize/Prize'
@@ -16,14 +16,29 @@ const Discover = () => {
 
   useEffect(() => {
     if (latitude && longitude) {
-      Promise.all([reqDiscover({ latitude, longitude }), reqSuggest()]).then(
-        resArr => {
-          if (resArr[0].code === 0 && resArr[1].code === 0) {
-            setDiscover(resArr[0].data['1'])
-            setSuggests(resArr[1].data)
-          }
+      Promise.all([
+        // 活动
+        ajax.reqDiscover({ latitude, longitude }),
+        // 限时好礼
+        ajax.reqSuggest(),
+      ]).then(resArr => {
+        // 解构
+        const [resDiscover, resSuggest] = resArr
+        const [discoverErr, discoverData] = resDiscover
+        const [suggestErr, suggestData] = resSuggest
+
+        if (discoverData && discoverData.code === 0) {
+          setDiscover(discoverData.data['1'])
+        } else {
+          console.log(discoverData)
         }
-      )
+
+        if (suggestData && suggestData.code === 0) {
+          setSuggests(suggestData.data)
+        } else {
+          console.log(suggestData)
+        }
+      })
     }
   }, [latitude, longitude])
 

@@ -2,7 +2,7 @@
 import Taro, { useDidShow } from '@tarojs/taro'
 import React, { useState } from 'react'
 import { View, Image } from '@tarojs/components'
-import { reqUserInfo } from '@/src/api'
+import ajax from '@/src/api'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
 
 import './index.scss'
@@ -29,9 +29,15 @@ const Profile = () => {
 
   // 获取用户信息
   const getUserInfo = async () => {
-    const result = await reqUserInfo()
+    const [err, result] = await ajax.reqUserInfo()
+    if (err && err.name === '401') {
+      console.log(err)
+      return
+    }
     if (result.code === 0) {
       setUserInfo(result.data)
+    } else {
+      console.log(result)
     }
   }
 

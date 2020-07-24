@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Image, Text } from '@tarojs/components'
 import Card from '@/src/components/Card/Card'
 import imgUrl from '@/src/utils/imgUrl'
-import { reqBrandStory } from '@/src/api'
+import ajax from '@/src/api'
 
 import './ShopInfo.scss'
 
@@ -12,9 +12,16 @@ const ShopInfo = ({ shopInfo }) => {
 
   // 获取品牌故事数据
   useEffect(() => {
-    reqBrandStory().then(res => {
-      if (res.code === 0) {
-        setBrandStory(res.data)
+    ajax.reqBrandStory().then(([err, result]) => {
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      if (result.code === 0) {
+        setBrandStory(result.data)
+      } else {
+        console.log(result)
       }
     })
   }, [])

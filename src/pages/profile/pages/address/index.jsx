@@ -3,7 +3,7 @@ import Taro, { useDidShow, useRouter } from '@tarojs/taro'
 import React, { useMemo } from 'react'
 import { View, Text } from '@tarojs/components'
 import { useDispatch, useSelector } from 'react-redux'
-import { reqDelUserAddress } from '@/src/api'
+import ajax from '@/src/api'
 import {
   atUserAddress,
   removeUserAddress,
@@ -45,10 +45,17 @@ const ProfileAddress = () => {
       content: '确定删除该地址',
       success: async res => {
         if (res.confirm) {
-          const result = await reqDelUserAddress({ id })
+          const [err, result] = await ajax.reqDelUserAddress({ id })
+
+          if (err) {
+            console.log(err)
+            return
+          }
+
           if (result.code === 0) {
             getAddress()
           } else {
+            console.log(result)
             Taro.showToast({ title: result.message, icon: 'none' })
           }
         }
@@ -80,13 +87,15 @@ const ProfileAddress = () => {
   }
 
   // 返回个人中心
-  // const goProfile = () => {
-  //   Taro.redirectTo({ url: '/pages/profile/index' })
-  // }
+  const backProfile = () => {
+    Taro.redirectTo({ url: '/pages/profile/index' })
+  }
 
   return (
     <View className='profileaddress'>
-      {process.env.TARO_ENV === 'h5' && <NavBar title='我的地址' />}
+      {process.env.TARO_ENV === 'h5' && (
+        <NavBar title='我的地址' onClose={backProfile} />
+      )}
       <View className='profileaddress-list'>
         {userAddressList.map(item => {
           return (

@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { View, Text, Input, ScrollView } from '@tarojs/components'
 import { useSelector, useDispatch } from 'react-redux'
-import { reqUseSearchAddress } from '@/src/api'
+import ajax from '@/src/api'
 import { setAtUserAddress, initCurrentAddress } from '@/src/redux/actions/user'
 import NavBar from '@/src/components/NavBar/NavBar'
 import './index.scss'
@@ -26,10 +26,17 @@ const Search = () => {
         longitude: currentAddress.longitude,
         latitude: currentAddress.latitude,
       }
-      const result = await reqUseSearchAddress(parmas)
+      const [err, result] = await ajax.reqUseSearchAddress(parmas)
+
+      if (err) {
+        console.log(err)
+        return
+      }
+      
       if (result.code === 0) {
         setAddressList(result.data)
       } else {
+        console.log(result)
         Taro.showToast({ title: result.message, icon: 'none' })
       }
     }
