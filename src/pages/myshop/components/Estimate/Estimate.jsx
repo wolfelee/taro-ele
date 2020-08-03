@@ -5,9 +5,12 @@ import classnames from 'classnames'
 import Star from '@/src/components/Star/Star'
 import imgUrl from '@/src/utils/imgUrl'
 import ajax from '@/src/api'
+import _ from 'lodash'
+import { WEAPP, H5 } from '@/src/config/base'
 
 import defaultHead from '@/src/assets/images/default-head.png'
 import './Estimate.scss'
+import getDom from '@/src/utils/getDom'
 
 const Estimate = ({ userEstimate }) => {
   const { comments, rating, tags } = userEstimate
@@ -134,12 +137,25 @@ const Estimate = ({ userEstimate }) => {
     )
   }
 
+  // 滚动监听
+  const onScroll = _.throttle(async () => {
+    const [result] = await getDom('.tags')
+    if (result[0].top > 115) {
+      WEAPP &&
+        Taro.pageScrollTo({
+          scrollTop: 9999,
+        })
+      H5 && window.scrollTo(0, 9999)
+    }
+  }, 200)
+
   return (
     <ScrollView
       scrollY
       lowerThreshold={100}
       onScrollToLower={commentsScrolly}
       className='estimate'
+      onScroll={onScroll}
     >
       <View className='rating'>
         <View className='rating-left'>

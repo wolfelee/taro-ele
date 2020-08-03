@@ -34,7 +34,7 @@ const FilterShops = (
   // 打开/关闭 综合排序
   const handleOpenSort = () => {
     sortHide && onFilterTop && onFilterTop()
-    setSortHide(data => !data)
+    setSortHide(flag => !flag)
     setFilterHide(true)
     weSetScroll(!sortHide)
   }
@@ -80,7 +80,7 @@ const FilterShops = (
   // 打开/关闭 筛选
   const handleOpenFilter = () => {
     filterHide && onFilterTop && onFilterTop()
-    setFilterHide(data => !data)
+    setFilterHide(flag => !flag)
     setSortHide(true)
     weSetScroll(!filterHide)
   }

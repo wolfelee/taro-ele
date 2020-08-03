@@ -171,7 +171,7 @@ class Ajax extends Server {
   async reqGetBatchFilter(params) {
     let [err, result] = await to(this.ajax(BASEURL + '/getBatchFilter', params))
     err = this.errMessage(err)
-
+    console.log(err)
     return [err, result]
   }
 

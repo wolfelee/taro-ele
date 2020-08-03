@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
 import React, { useEffect, useState } from 'react'
 import { View } from '@tarojs/components'
+import { H5 } from '@/src/config/base'
 import ajax from '@/src/api'
 import { useSelector } from 'react-redux'
 import Back from './components/Back/Back'
@@ -27,7 +28,6 @@ const Search = () => {
       ajax.reqHotSearchWords({ latitude, longitude }).then(([err, result]) => {
         if (err) {
           if (err.name === '401') {
-            console.log(err)
             Taro.showToast({
               title: '请先登录',
               icon: 'none',
@@ -46,7 +46,8 @@ const Search = () => {
         if (result.code === 0) {
           setHotList(result.data)
         } else {
-          console.log(result)
+          console.log('?')
+          // console.log(result)
         }
       })
     }
@@ -124,7 +125,7 @@ const Search = () => {
 
   return (
     <View className='search'>
-      <View className='icon icon-fanhui' onClick={onBack}></View>
+      {H5 && <View className='icon icon-fanhui' onClick={onBack}></View>}
       <SearchBar
         onSearch={typeaHead}
         input={input}
@@ -154,7 +155,7 @@ const Search = () => {
               onTypeaHead={typeaHead}
             />
           )}
-          {!!hotList.length  && (
+          {!!hotList.length && (
             <Back title='热门搜索' dataList={hotList} onTypeaHead={typeaHead} />
           )}
         </>
