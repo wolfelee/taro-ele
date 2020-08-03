@@ -1,12 +1,24 @@
 // 首页
-import Taro from '@tarojs/taro'
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { View, ScrollView } from '@tarojs/components'
+import Taro, { useDidShow, useDidHide, getCurrentInstance } from '@tarojs/taro'
+import React, {
+  useLayoutEffect,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react'
+import { View } from '@tarojs/components'
 import { useSelector, useDispatch } from 'react-redux'
+import _ from 'lodash'
+import { H5, WEAPP } from '@/src/config/base'
+import getDom from '@/src/utils/getDom'
 
 import ajax from '@/src/api'
 import { initCurrentAddress } from '@/src/redux/actions/user'
 import { actionGetBatchFilter } from '@/src/redux/actions/filterShop'
+
+import MyScroll from '@/src/components/MyScroll/MyScroll'
 import FooterBar from '@/src/components/FooterBar/FooterBar'
 import TipNull from '@/src/components/TipNull/TipNull'
 import FilterShops from '@/src/components/FilterShops/FilterShops'
@@ -22,14 +34,21 @@ import MsiteSvip from './components/Svip/Svip'
 
 import './index.scss'
 
+const msiteDom = document.querySelector('.msite')
+
+if (H5) {
+  var tuaScroll = require('tua-body-scroll-lock')
+}
+
 const Msite = () => {
-  // 当前用户收货地址
-  const currentAddress = useSelector(state => state.currentAddress)
-  // 首页筛选条数据
-  const batchFilter = useSelector(state => state.batchFilter)
-  const token = useSelector(state => state.token)
-  // 请求商品列表参数
-  const shopParams = useSelector(state => state.shopParams)
+  if (H5) {
+    var router = getCurrentInstance()
+  }
+  // 当前用户收货地址 选条数据 用户token  商品列表参数
+  const { currentAddress, batchFilter, token, shopParams } = useSelector(
+    state => state
+  )
+
   // dispatch
   const dispatch = useDispatch()
   // 导航数据
@@ -52,9 +71,11 @@ const Msite = () => {
   // 是否有更多商家
   const [isMore, setIsMore] = useState(true)
 
+  const myRef = useRef()
+
   // 用户是否登录,是否有收货地址,是否加载商家筛选条
   const isLogin = useMemo(() => {
-    return token && batchFilter.sort.length > 0 && currentAddress.latitude
+    return token && !!batchFilter.sort.length && currentAddress.latitude
   }, [token, batchFilter, currentAddress])
 
   // 收货地址 显示/隐藏
@@ -73,143 +94,199 @@ const Msite = () => {
   }, [dispatch])
 
   // 获取导航数据
-  useEffect(() => {
+  const _getNavList = useCallback(async () => {
     const { latitude, longitude } = currentAddress
     if (latitude && longitude) {
-      ajax.reqNavList({ latitude, longitude }).then(([err, result]) => {
-        if (err) {
-          console.log(err)
-          return
-        }
+      const [err, result] = await ajax.reqNavList({ latitude, longitude })
+      if (err) {
+        console.log(err)
+        return
+      }
 
-        if (result.code === 0) {
-          setNavList(result.data)
-        } else {
-          console.log(result)
-          Taro.showToast({ title: result.message, icon: 'none' })
-        }
-      })
+      if (result.code === 0) {
+        setNavList(result.data)
+      } else {
+        console.log(result)
+      }
     }
   }, [currentAddress])
+
+  // 获取首页筛选条数据
+  const _getFilter = useCallback(() => {
+    const { latitude, longitude } = currentAddress
+    if (latitude && longitude && !batchFilter.sort.length) {
+      dispatch(actionGetBatchFilter({ latitude, longitude }))
+    }
+  }, [currentAddress, batchFilter, dispatch])
+
+  // 获取商家列表
+  const _getShopList = useCallback(async () => {
+    if (isLogin && isMore) {
+      const [err, result] = await ajax.reqGetMsiteShopList({
+        latitude: currentAddress.latitude,
+        longitude: currentAddress.longitude,
+        ...shopParams,
+        offset,
+      })
+
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      if (result.code === 0) {
+        if (offset === 0) {
+          setShopList(result.data)
+        } else {
+          if (result.data.length) {
+            setShopList(data => [...data, ...result.data])
+          } else {
+            setIsMore(false)
+          }
+        }
+        setBottomFlag(true)
+        // 计算top值
+        _getOptionsTop()
+      } else {
+        console.log(result)
+      }
+    }
+  }, [isLogin, shopParams, currentAddress, offset, isMore])
+
+  // 清空offset 没用更多提示
+  const removeOffset = () => {
+    setOffset(0)
+    setIsMore(true)
+  }
+
+  useEffect(() => {
+    _getNavList()
+  }, [_getNavList])
+
+  useEffect(() => {
+    _getFilter()
+  }, [_getFilter])
+
+  useEffect(() => {
+    _getShopList()
+  }, [_getShopList])
 
   // 跳转登录
   const goLogin = () => {
     Taro.redirectTo({ url: '/pages/login/index' })
   }
 
-  // 跳转商家列表
-  const goFood = navItem => {
-    const { name, id } = navItem
-    Taro.redirectTo({ url: `/pages/food/index?id=${id}&name=${name}` })
+  const _getOptionsTop = async () => {
+    const result = await getDom('#filtershops')
+    const domTop = result[0][0].top
+    setInitTop(domTop)
   }
 
-  // 获取首页筛选条数据
-  useEffect(() => {
-    const { latitude, longitude } = currentAddress
-    if (latitude && longitude && !batchFilter.sort.length) {
-      dispatch(actionGetBatchFilter({ latitude, longitude }))
-    }
-  }, [dispatch, currentAddress, batchFilter])
-
   // 获取筛选据顶部距离
-  useEffect(() => {
-    setTimeout(() => {
-      const query = Taro.createSelectorQuery()
-      query.select('#filtershops').boundingClientRect()
-      query.selectViewport().scrollOffset()
-      query.exec(res => {
-        if (res[0]) {
-          const domTop = res[0].top
-          if (initTop === 0) {
-            setInitTop(domTop + 2)
-          }
-        }
-      })
-    }, 0)
-  })
+  // useEffect(() => {
+  //   if (H5) {
+  //     const filterDom = document.querySelector('#filtershops')
+  //     setInitTop(filterDom?.offsetTop)
+  //     console.log('h5', filterDom?.offsetTop)
+  //   }
+  // }, [batchFilter])
 
-  // 设置滚动条位置,每次要不同值否则无效
+  // 设置滚动条位置和禁止滚动,每次要不同值否则无效,
   const onFilterTop = () => {
-    const myInitTop = initTop - 0.1
+    const myInitTop = initTop + 0.1
+    console.log(myInitTop)
     if (initTop === top) {
       setTop(myInitTop)
     } else {
-      setTop(myInitTop + 0.1)
+      setTop(myInitTop - 0.1)
+    }
+    if (H5) {
+      window.scrollTo(0, myInitTop)
     }
   }
 
   // 禁止滚动
   const weSetScroll = flag => {
-    if (process.env.TARO_ENV === 'h5') {
-      const body = document.querySelector('.msite')
-      if (flag) {
-        body.style.overflowY = 'scroll'
-      } else {
-        body.style.overflowY = 'hidden'
-      }
+    if (H5) {
+      setTimeout(() => {
+        if (flag) {
+          tuaScroll.unlock(msiteDom)
+        } else {
+          tuaScroll.lock(msiteDom)
+        }
+      }, 0)
     }
+
     setWeiScroll(flag)
   }
 
-  // 清空offset
-  const removeOffset = () => {
-    setOffset(0)
-    setIsMore(true)
-  }
-
-  // 获取商家列表
-  useEffect(() => {
-    if (isLogin && isMore) {
-      ajax
-        .reqGetMsiteShopList({
-          latitude: currentAddress.latitude,
-          longitude: currentAddress.longitude,
-          ...shopParams,
-          offset,
-        })
-        .then(([err, result]) => {
-          
-          if (err) {
-            console.log(err)
-            return
-          }
-
-          if (result.code === 0) {
-            if (offset === 0) {
-              setShopList(result.data)
-            } else {
-              if (result.data.length) {
-                setShopList(data => [...data, ...result.data])
-              } else {
-                // Taro.showToast({ title: '没有更多了', icon: 'none' })
-                setIsMore(false)
-              }
-            }
-            setBottomFlag(true)
-          } else {
-            console.log(result)
-          }
-        })
-    }
-  }, [isLogin, shopParams, currentAddress, offset, isMore])
-
   // 滚动到底部加载更多商家列表
-  const scrolltolower = useCallback(() => {
+  const scrolltolower = () => {
     if (bottomFlag && isLogin && isMore) {
       setOffset(num => {
         return num + shopParams.limit
       })
       setBottomFlag(false)
     }
-  }, [isLogin, bottomFlag, shopParams, isMore])
+  }
 
+  if (H5) {
+    const scorllTest = useCallback(
+      _.throttle(() => {
+        const { scrollHeight } = myRef.current
+        const myScrollTop =
+          document.documentElement.scrollTop ||
+          document.body.scrollTop ||
+          window.pageYOffset
+        const myHeight =
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight
+
+        // 未滚动到底部
+        if (scrollHeight - myHeight > myScrollTop) {
+          return
+        } else {
+          if (bottomFlag && isLogin && isMore) {
+            //更新offset
+            setOffset(num => {
+              return num + shopParams.limit
+            })
+            setBottomFlag(false)
+          }
+        }
+      }, 200),
+
+      [bottomFlag, isLogin, isMore, shopParams]
+    )
+
+    useLayoutEffect(() => {
+      if (router.app.config && router.app.config.router) {
+        if (router.app.config.router.pathname === '/pages/msite/index') {
+          document.addEventListener('scroll', scorllTest, false)
+        }
+      }
+      return () => {
+        document.removeEventListener('scroll', scorllTest, false)
+        tuaScroll.unlock(msiteDom)
+      }
+    }, [scorllTest, router])
+    useDidShow(() => {
+      document.addEventListener('scroll', scorllTest, false)
+    })
+    useDidHide(() => {
+      document.removeEventListener('scroll', scorllTest, false)
+      tuaScroll.unlock(msiteDom)
+    })
+  }
   return (
-    <ScrollView
+    <MyScroll
       scrollY={weiScroll}
       scrollTop={top}
       className='msite'
       lowerThreshold={100}
       onScrollToLower={scrolltolower}
+      myRef={myRef}
     >
       <View className='msite-main'>
         {/* 头部地址,搜索 */}
@@ -219,13 +296,13 @@ const Msite = () => {
         />
 
         {/* switch 导航 */}
-        <MsiteSwiper navList={navList} onGoFood={goFood} />
+        <MsiteSwiper navList={navList} />
 
         {/* 广告 */}
         <MsiteAdvertising
           title='品质套餐'
           detail='搭配齐全吃得好'
-          img='https://cube.elemecdn.com/e/ee/df43e7e53f6e1346c3fda0609f1d3png.png?x-oss-process=image/format,webp/resize,w_282,h_188,m_fixed'
+          img='https://cube.elemecdn.com/e/ee/df43e7e53f6e1346c3fda0609f1d3png.png'
           url='/pages/ranking'
         />
 
@@ -235,7 +312,7 @@ const Msite = () => {
         <View className='list-title'>推荐商家</View>
         {/*登录渲染商家筛选及列表 */}
         {isLogin && (
-          <>
+          <View className='options'>
             <FilterShops
               batchFilter={batchFilter}
               onFilterTop={onFilterTop}
@@ -248,10 +325,12 @@ const Msite = () => {
                   <Shop key={shop.restaurant.id} restaurant={shop.restaurant} />
                 )
               })}
-
-              {!isMore && <Loading title='没有更多了...' />}
+              <Loading
+                title={isMore ? '加载中...' : '没有更多了'}
+                icon={isMore}
+              />
             </View>
-          </>
+          </View>
         )}
 
         {/* 无收货地址 */}
@@ -263,6 +342,7 @@ const Msite = () => {
             onButtonClick={() => onSetAddressShow(true)}
           />
         )}
+
         {/* 未登录提示登录*/}
         {!isLogin && currentAddress.city && (
           <TipNull
@@ -289,19 +369,11 @@ const Msite = () => {
           onSetCityShow={onSetCityShow}
           onRemoveOffset={removeOffset}
         />
-
-        {/* 底部bar */}
-        <FooterBar />
       </View>
-    </ScrollView>
+      {/* 底部bar */}
+      <FooterBar />
+    </MyScroll>
   )
 }
 
-Msite.defaultProps = {
-  setCurrentAddress: () => {},
-  address: {},
-}
-
 export default Msite
-
-// hostContentNodes = NodeList(3) [comment, taro-view-core.msite-main, text], node = #comment {s-cn: true, data: "", length: 0, previousElementSibling:

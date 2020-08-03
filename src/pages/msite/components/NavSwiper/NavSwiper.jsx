@@ -1,13 +1,18 @@
+import Taro from '@tarojs/taro'
 import React, { useState } from 'react'
 import { View, Image } from '@tarojs/components'
 import imgUrl from '@/src/utils/imgUrl'
 
 import './NavSwiper.scss'
 
-const oss = '?x-oss-process=image/format,webp/resize,w_90,h_90,m_fixed'
-
-const NavSwiper = ({ navList, onGoFood }) => {
+const NavSwiper = ({ navList }) => {
   const [framework] = useState(Array(10).fill(1))
+
+  // 跳转商家列表
+  const goFood = navItem => {
+    const { name, id } = navItem
+    Taro.redirectTo({ url: `/pages/food/index?id=${id}&name=${name}` })
+  }
 
   return (
     <View className='navswiper'>
@@ -18,11 +23,12 @@ const NavSwiper = ({ navList, onGoFood }) => {
             navList.map(navItem => {
               return (
                 <View className='navswiper-main-item' key={navItem.id}>
-                  <View onClick={() => onGoFood(navItem)}>
+                  <View onClick={() => goFood(navItem)}>
                     <View className='navswiper-main-item-image'>
                       <Image
                         className='nav-image'
-                        src={imgUrl(navItem.image_hash) + oss}
+                        mode='widthFix'
+                        src={imgUrl(navItem.image_hash)}
                       ></Image>
                     </View>
                     <View className='navswiper-main-item-title'>

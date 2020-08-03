@@ -9,8 +9,6 @@ import Star from '../Star/Star'
 
 import './Shop.scss'
 
-const oss = '?x-oss-process=image/format,webp/resize,w_130,h_130,m_fixed'
-
 const Shop = ({ restaurant }) => {
   //显示/隐藏
   const [isHide, setIsHide] = useState(false)
@@ -54,7 +52,7 @@ const Shop = ({ restaurant }) => {
     <View className='shop' onClick={goShop}>
       <View className='shop-left'>
         <Image
-          src={imgUrl(restaurant.image_path) + oss}
+          src={imgUrl(restaurant.image_path)}
           lazyLoad
           className='shop-left-img'
         />

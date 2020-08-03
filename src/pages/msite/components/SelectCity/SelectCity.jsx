@@ -1,6 +1,7 @@
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { View } from '@tarojs/components'
+import { WEAPP } from '@/src/config/base'
 import classnames from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentAddress } from '@/src/redux/actions/user'
@@ -37,7 +38,7 @@ const SelectCity = props => {
   // 发送请求
   const getCity = useCallback(async () => {
     const [err, result] = await ajax.reqCityList()
-    
+
     if (err) {
       console.log(err)
       return
@@ -138,7 +139,7 @@ const SelectCity = props => {
   // 初始化每个索引城市offsetTop
   useEffect(() => {
     if (cityShow) {
-      if (process.env.TARO_ENV === 'weapp') {
+      if (WEAPP) {
         setTimeout(() => {
           const query = Taro.createSelectorQuery().in(current.page)
           query.selectAll('.dom').boundingClientRect()

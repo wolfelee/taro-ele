@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react'
+import React, { useState, useImperativeHandle, forwardRef, memo } from 'react'
 import classnames from 'classnames'
 import { View, Text, Image } from '@tarojs/components'
 import imgUrl from '@/src/utils/imgUrl'
@@ -18,11 +18,13 @@ const FilterShops = (
   ref
 ) => {
   const { nav, sort, filter } = batchFilter
+
   const [myFilter, setMyFilter] = useState(() => {
-    // 深拷贝
+    // 深拷贝筛选
     const str = JSON.stringify(filter)
     return JSON.parse(str)
   })
+  
   const dispatch = useDispatch()
   // 排序 状态
   const [sortHide, setSortHide] = useState(true)
@@ -256,7 +258,6 @@ const FilterShops = (
           <View className='filter-item'>
             <View className='filter-item-title'>{filter.serve.title}</View>
             <View className='filter-item-main'>
-
               {myFilter.serve.main.map(item => {
                 return (
                   <View
@@ -353,4 +354,11 @@ const FilterShops = (
   )
 }
 
-export default forwardRef(FilterShops)
+// FilterShops.defaultProps = {
+//   batchFilter: {},
+//   weSetScroll: false,
+//   onFilterTop: () => {},
+//   onRemoveOffset: () => {},
+// }
+
+export default memo(forwardRef(FilterShops))

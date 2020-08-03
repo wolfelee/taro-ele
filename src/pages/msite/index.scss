@@ -1,15 +1,10 @@
-// .page {
-//   overflow-y: hidden;
-// }
-// body {
-//   overflow-y: hidden;
-// }
 .msite {
-  min-height: 100vh;
+  /*  #ifdef  weapp  */
+  height: 100vh;
+  /*  #endif  */
 
   -webkit-overflow-scrolling: touch; //ios不流畅问题
   .msite-main {
-    padding-bottom: 130px;
     .list-title {
       display: flex;
       align-items: center;

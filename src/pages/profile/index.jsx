@@ -30,7 +30,7 @@ const Profile = () => {
   // 获取用户信息
   const getUserInfo = async () => {
     const [err, result] = await ajax.reqUserInfo()
-    if (err && err.name === '401') {
+    if (err?.name === '401') {
       console.log(err)
       return
     }

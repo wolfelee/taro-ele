@@ -1,5 +1,6 @@
 .estimate {
   height: 100vh;
+  -webkit-overflow-scrolling: touch; //ios不流畅问题
   .rating {
     display: flex;
     padding: 50px 40px 20px 40px;

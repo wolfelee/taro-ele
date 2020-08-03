@@ -149,7 +149,7 @@ const Register = () => {
               className={classnames('input', {
                 inputactive: inpActive.usernameActive === 1,
                 pass: verifyPhone,
-                error: phone.length > 0 && !verifyPhone,
+                error: !!phone.length  && !verifyPhone,
               })}
               type='number'
               placeholderClass='placeholder'
@@ -170,7 +170,7 @@ const Register = () => {
               className={classnames('input', {
                 inputactive: inpActive.passwordActive === 1,
                 pass: verifypwass,
-                error: password.length > 0 && !verifypwass,
+                error: !!password.length  && !verifypwass,
               })}
               onInput={verifyPassword}
               onFocus={() => handleFocus('passwordActive', 1)}
@@ -189,9 +189,7 @@ const Register = () => {
                 inputactive: inpActive.password2Active === 1,
                 pass: verifypwass && comparePassWord,
                 error:
-                  password2.length > 0 &&
-                  password.length > 0 &&
-                  !comparePassWord,
+                  !!password2.length && !!password.length && !comparePassWord,
               })}
               onInput={verifyPassword2}
               onFocus={() => handleFocus('password2Active', 1)}

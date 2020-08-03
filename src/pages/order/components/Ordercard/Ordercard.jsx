@@ -7,7 +7,7 @@ import './Ordercard.scss'
 
 const Ordercard = ({ orderData, onLink }) => {
   const goodNames = useMemo(() => {
-    const foods = JSON.parse(orderData.foods)
+    const foods = orderData.foods
     const lc = foods.length
     let names = ''
     foods.forEach((food, i) => {

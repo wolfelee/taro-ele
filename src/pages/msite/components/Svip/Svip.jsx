@@ -10,7 +10,7 @@ const Svip = () => {
         <View className='svip-icon'>
           <Image
             className='image'
-            src='https://cube.elemecdn.com/8/0e/4dd212d831becab6e3ebd484c0941jpeg.jpeg?x-oss-process=image/format,webp/resize,w_34'
+            src='https://cube.elemecdn.com/8/0e/4dd212d831becab6e3ebd484c0941jpeg.jpeg'
           ></Image>
         </View>
         <View className='svip-title'>超级会员</View>

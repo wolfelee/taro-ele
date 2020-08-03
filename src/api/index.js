@@ -1,12 +1,16 @@
 import to from 'await-to-js'
 import Server from './server'
+import configStore from '../redux/store'
+import { removeToken } from '../redux/actions/user'
 
 let BASEURL
 if (process.env.TARO_ENV === 'h5') {
   BASEURL = '/api'
 } else if (process.env.TARO_ENV === 'weapp') {
-  BASEURL = 'http://localhost:4000/api'
+  BASEURL = 'http://192.168.1.106:4000/api'
 }
+
+const store = configStore()
 
 class Ajax extends Server {
   // 异常处理 401 500
@@ -16,6 +20,9 @@ class Ajax extends Server {
     }
 
     if (err.status === 401) {
+      // 清空token
+      store.dispatch(removeToken())
+
       return {
         name: '401',
         message: '请先登录',
@@ -29,6 +36,7 @@ class Ajax extends Server {
       return {
         name: 'err',
         message: '其他错误',
+        status: err.status,
       }
     }
   }
@@ -97,7 +105,7 @@ class Ajax extends Server {
   async reqUserAddress() {
     let [err, result] = await to(this.ajax(BASEURL + '/userAddress'))
     err = this.errMessage(err)
-    
+
     return [err, result]
   }
 
@@ -198,8 +206,8 @@ class Ajax extends Server {
   }
 
   // 获取商家详情信息
-  async reqGetShop() {
-    let [err, result] = await to(this.ajax(BASEURL + '/getShop'))
+  async reqGetShop(id) {
+    let [err, result] = await to(this.ajax(BASEURL + '/getShop', { id }))
     err = this.errMessage(err)
 
     return [err, result]
@@ -222,6 +230,7 @@ class Ajax extends Server {
 
     return [err, result]
   }
+
   // 获取商家品牌故事
   async reqBrandStory() {
     let [err, result] = await to(this.ajax(BASEURL + '/brandStory'))

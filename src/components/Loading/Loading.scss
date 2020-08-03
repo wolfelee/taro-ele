@@ -1,18 +1,25 @@
 .loading {
-  width: 100%;
-  height: 50px;
-  text-align: center;
-  color: #666666;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 50px;
+  padding-bottom: 20px;
+  color: #666;
+  line-height: 1.2;
+  text-align: center;
   .loading-rotate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
     animation: myrotate 1s linear infinite;
-    width: 50px;
-    height: 50px;
     .loading-rotate-icon {
-      font-size: 26px;
+      font-size: 30px;
     }
+  }
+  .loading-title {
+    line-height: 1.2;
   }
 }
 

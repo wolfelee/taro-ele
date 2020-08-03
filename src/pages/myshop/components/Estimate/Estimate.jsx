@@ -77,7 +77,7 @@ const Estimate = ({ userEstimate }) => {
         limit: limit,
         has_content: pavtiveContent,
       })
-      
+
       if (err) {
         console.log(err)
         return
@@ -229,23 +229,20 @@ const Estimate = ({ userEstimate }) => {
                       className='leaveword-text'
                     ></RichText>
                     <View className='leaveword-images'>
-                      {comment.order_images &&
-                        comment.order_images.map(img => {
-                          return (
-                            <View
-                              className='leaveword-images-item'
-                              key={img.image_hash}
-                            >
-                              <Image
-                                src={imgUrl(img.image_hash)}
-                                className='leaveword-images-img'
-                                onClick={() =>
-                                  openImg(img, comment.order_images)
-                                }
-                              />
-                            </View>
-                          )
-                        })}
+                      {comment?.order_images?.map(img => {
+                        return (
+                          <View
+                            className='leaveword-images-item'
+                            key={img.image_hash}
+                          >
+                            <Image
+                              src={imgUrl(img.image_hash)}
+                              className='leaveword-images-img'
+                              onClick={() => openImg(img, comment.order_images)}
+                            />
+                          </View>
+                        )
+                      })}
                     </View>
                   </View>
                 </View>

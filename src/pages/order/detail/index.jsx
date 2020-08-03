@@ -1,6 +1,7 @@
 import Taro, { useRouter } from '@tarojs/taro'
 import React, { useEffect, useState, useMemo } from 'react'
 import { View, Text, Image } from '@tarojs/components'
+import { H5 } from '@/src/config/base'
 import ajax from '@/src/api'
 import NavBar from '@/src/components/NavBar/NavBar'
 import Card from '@/src/components/Card/Card'
@@ -32,11 +33,11 @@ const Detail = () => {
 
   // 商品列表
   const foods = useMemo(() => {
-    return detailData.foods && JSON.parse(detailData.foods)
+    return detailData?.foods
   }, [detailData])
 
   const address = useMemo(() => {
-    return detailData.address && JSON.parse(detailData.address)
+    return detailData?.address
   }, [detailData])
 
   // 联系商家
@@ -52,7 +53,7 @@ const Detail = () => {
 
   return (
     <View className='order-detail'>
-      {process.env.TARO_ENV === 'h5' && <NavBar title='订单详情' />}
+      {H5 && <NavBar title='订单详情' />}
       <View className='order-detail-main'>
         <Card className='order-detail-tip'>
           <View className='order-detail-tip-left'>

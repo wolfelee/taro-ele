@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import React, { useMemo, useState, useCallback } from 'react'
+import { H5, WEAPP } from '@/src/config/base'
 import { useSelector } from 'react-redux'
 import { View } from '@tarojs/components'
 import NavBar from '@/src/components/NavBar/NavBar'
@@ -40,8 +41,10 @@ const Clearing = () => {
         shopName: shopInfo.name,
         imagePath: shopInfo.image_path,
         delivery: shopInfo.delivery_mode.text,
-        address: currentAddress,
+        address: JSON.stringify(currentAddress),
+        foods: JSON.stringify(cartInfo.foods),
       }
+
       setPayLoading(true)
       const [err, result] = await ajax.reqPay(body)
       if (err) {
@@ -68,9 +71,13 @@ const Clearing = () => {
     }
   }, [cartInfo, shopInfo, currentAddress])
 
+  if (H5) {
+    document.removeEventListener('scroll', () => {}, false)
+  }
+
   return (
     <View className='clearing'>
-      {process.env.TARO_ENV === 'h5' && <NavBar title='结算' />}
+      {H5 && <NavBar title='结算' />}
       <CartAddress
         useAddress={currentAddress}
         onSelectAddress={selectAddress}

@@ -27,13 +27,17 @@ const Discover = () => {
         const [discoverErr, discoverData] = resDiscover
         const [suggestErr, suggestData] = resSuggest
 
-        if (discoverData && discoverData.code === 0) {
+        if (discoverErr || suggestErr) {
+          return
+        }
+
+        if (discoverData?.code === 0) {
           setDiscover(discoverData.data['1'])
         } else {
           console.log(discoverData)
         }
 
-        if (suggestData && suggestData.code === 0) {
+        if (suggestData?.code === 0) {
           setSuggests(suggestData.data)
         } else {
           console.log(suggestData)

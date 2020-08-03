@@ -14,7 +14,12 @@ const config = {
   plugins: [],
   defineConstants: {},
   copy: {
-    patterns: [],
+    patterns: [
+      // {
+      //   from: 'sitemap.json',
+      //   to: 'dist/sitemap.json',
+      // },
+    ],
     options: {},
   },
   sass: {

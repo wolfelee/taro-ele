@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { View, ScrollView } from '@tarojs/components'
 import ajax from '@/src/api'
+import { H5, WEAPP } from '@/src/config/base'
 import { actionGetBatchFilter } from '@/src/redux/actions/filterShop'
 
 import Categories from '@/src/components/Categories/Categories'
@@ -62,12 +63,15 @@ const Food = () => {
         const [foodsPagesErr, foodsPagesData] = resFoodsPages
         const [foodsClassErr, foodsClassData] = resFoodsClass
 
-        if (foodsPagesErr.name === '401' || foodsClassErr.name === '401') {
-          Taro.showToast({ title: '请先登录', icon: 'none', duration: 1500 })
-          setTimeout(() => {
-            Taro.redirectTo({ url: '/pages/msite/index' })
-          }, 1500)
+        if (foodsPagesErr || foodsClassErr) {
+          if (foodsPagesErr.name === '401' || foodsClassErr.name === '401') {
+            Taro.showToast({ title: '请先登录', icon: 'none', duration: 1500 })
+            setTimeout(() => {
+              Taro.redirectTo({ url: '/pages/msite/index' })
+            }, 1500)
 
+            return
+          }
           return
         }
 
@@ -107,7 +111,6 @@ const Food = () => {
           id: activeFoodPage && activeFoodPage.id,
         })
         .then(([err, result]) => {
-          
           if (err) {
             console.log(err)
             return
@@ -157,22 +160,21 @@ const Food = () => {
 
   // 获取首页筛选条数据
   useEffect(() => {
-    const { latitude, longitude } = currentAddress
-    if (latitude && longitude && !batchFilter.sort.length) {
-      dispatch(actionGetBatchFilter({ latitude, longitude }))
-    }
-  }, [dispatch, currentAddress, batchFilter])
+    dispatch(actionGetBatchFilter())
+  }, [dispatch])
 
   // 禁止滚动
   const weSetScroll = flag => {
-    if (process.env.TARO_ENV === 'h5') {
+    if (H5) {
       const body = document.querySelector('.food')
       if (flag) {
         body.style.overflowY = 'scroll'
       } else {
         body.style.overflowY = 'hidden'
       }
-    } else {
+    }
+
+    if (WEAPP) {
       setWeiScroll(flag)
     }
   }
@@ -224,7 +226,7 @@ const Food = () => {
         {!isMore && <Loading title='没有更多了...'></Loading>}
       </ScrollView>
 
-      {process.env.TARO_ENV === 'h5' && (
+      {H5 && (
         <BackButton
           renderIcon={<View className='icon icon-daohangshouye'></View>}
           onLink={backMsite}

@@ -2,6 +2,7 @@
 import Taro, { useDidShow, useRouter } from '@tarojs/taro'
 import React, { useMemo } from 'react'
 import { View, Text } from '@tarojs/components'
+import { H5 } from '@/src/config/base'
 import { useDispatch, useSelector } from 'react-redux'
 import ajax from '@/src/api'
 import {
@@ -93,9 +94,7 @@ const ProfileAddress = () => {
 
   return (
     <View className='profileaddress'>
-      {process.env.TARO_ENV === 'h5' && (
-        <NavBar title='我的地址' onClose={backProfile} />
-      )}
+      {H5 && <NavBar title='我的地址' onClose={backProfile} />}
       <View className='profileaddress-list'>
         {userAddressList.map(item => {
           return (

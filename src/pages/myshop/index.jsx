@@ -1,6 +1,7 @@
-import Taro from '@tarojs/taro'
+import Taro, { useRouter } from '@tarojs/taro'
 import React, { useEffect, useState, useCallback } from 'react'
 import { View, Image, Text, ScrollView } from '@tarojs/components'
+import { H5 } from '@/src/config/base'
 
 import ajax from '@/src/api'
 import imgUrl from '@/src/utils/imgUrl'
@@ -18,12 +19,13 @@ import ShopInfo from './components/ShopInfo/ShopInfo'
 import './index.scss'
 
 const MyShop = () => {
+  const { params } = useRouter()
   // 商品列表
   const [goods, setGoods] = useState([])
   // 商家信息
   const [shopInfo, setShopInfo] = useState({})
   // 推荐商品
-  const [recommend, setRecommend] = useState([])
+  const [recommend, setRecommend] = useState({})
   // 加载完毕
   const [isOk, setIsOk] = useState(false)
   // 商家标题弹出层
@@ -71,16 +73,22 @@ const MyShop = () => {
 
   // 发送请求
   useEffect(() => {
+    const { id } = params
     // 发送请求获取 商家信息 , 商家评论
-    Promise.all([ajax.reqGetShop(), ajax.reqEstimate()]).then(dataArr => {
+    Promise.all([ajax.reqGetShop(id), ajax.reqEstimate(id)]).then(dataArr => {
       const [shop, estimate] = dataArr
       const [shopErr, shopData] = shop
       const [estimateErr, estimateData] = estimate
 
+      if (shopErr || estimateErr) {
+        Taro.reLaunch({ url: '/pages/msite/index' })
+        return
+      }
+
       if (shopData.code === 0) {
         setGoods(shopData.data.menu)
         setShopInfo(shopData.data.rst)
-        setRecommend(shopData.data.recommend[0])
+        shopData.data.recommend[0] && setRecommend(shopData.data.recommend[0])
         intervalFoods(shopData.data.menu)
       } else {
         console.log(shopData)
@@ -98,7 +106,7 @@ const MyShop = () => {
         Taro.redirectTo({ url: '/pages/msite/index' })
       }
     })
-  }, [])
+  }, [params])
 
   // 打开商家弹出层
   const openModal = () => {
@@ -136,6 +144,7 @@ const MyShop = () => {
       query.selectAll('.myshop-order-main-right-block').boundingClientRect()
       query.selectViewport().scrollOffset()
       query.exec(res => {
+        console.log(res)
         if (res[0][0]) {
           const initTop = res[0][0].top
           const newRes = res[0].map(item => Math.ceil(item.top - initTop))
@@ -311,12 +320,14 @@ const MyShop = () => {
         <View
           className='myshop-top-bg'
           style={{
-            background: `url(${imgUrl(shopInfo.shop_sign.image_hash)})`,
+            background: `url(${imgUrl(
+              shopInfo.shop_sign.image_hash
+                ? shopInfo.shop_sign.image_hash
+                : shopInfo.image_path
+            )})`,
           }}
         >
-          {process.env.TARO_ENV === 'h5' && (
-            <View className='icon icon-fanhui' onClick={onBack}></View>
-          )}
+          {H5 && <View className='icon icon-fanhui' onClick={onBack}></View>}
         </View>
         <View className='myshop-top-main'>
           <View className='myshop-logo'>
@@ -339,7 +350,7 @@ const MyShop = () => {
               {shopInfo.delivery_mode.text}约{shopInfo.order_lead_time}分钟
             </Text>
           </View>
-          {shopInfo.activity_tags.length > 0 && (
+          {!!shopInfo.activity_tags.length && (
             <View className='myshop-tags' onClick={e => onActivityHide(e)}>
               <View className='myshop-tags-left'>
                 {shopInfo.activity_tags.map(tag => {
@@ -352,7 +363,7 @@ const MyShop = () => {
               </View>
               <View className='myshop-tags-right'>
                 <View className='myshop-tags-right-title'>
-                  {shopInfo.activity_tags.length}个优惠
+                  {shopInfo.activities.length}个优惠
                 </View>
                 <View className='icon icon-xiajiantou'></View>
               </View>
@@ -383,36 +394,36 @@ const MyShop = () => {
       <View className='myshop-content'>
         <Tabs tabs={tabs}>
           <View className='myshop-order'>
-            <View className='myshop-order-banner'>
-              <Image
-                className='myshop-order-banner-img'
-                src={imgUrl(shopInfo.posters[0].image_hash)}
-              />
-            </View>
-            <View className='myshop-order-recommend'>
-              <View className='myshop-order-recommend-title'>
-                {recommend.name}
+            {shopInfo.posters[0] && (
+              <View className='myshop-order-banner'>
+                <Image
+                  className='myshop-order-banner-img'
+                  src={imgUrl(shopInfo.posters[0].image_hash)}
+                />
               </View>
-              <ScrollView scrollX className='myshop-order-recommend-main'>
-                {recommend.items.map(item => {
-                  return (
-                    <Recommend
-                      key={item.item_id}
-                      onUpdateCart={updateCart}
-                      recData={item}
-                      count={count(item)}
-                    />
-                  )
-                })}
-              </ScrollView>
-            </View>
+            )}
+            {recommend.name && (
+              <View className='myshop-order-recommend'>
+                <View className='myshop-order-recommend-title'>
+                  {recommend.name}
+                </View>
+                <ScrollView scrollX className='myshop-order-recommend-main'>
+                  {recommend.items.map(item => {
+                    return (
+                      <Recommend
+                        key={item.item_id}
+                        onUpdateCart={updateCart}
+                        recData={item}
+                        count={count(item)}
+                      />
+                    )
+                  })}
+                </ScrollView>
+              </View>
+            )}
 
             <View id='order-scroll' className='myshop-order-main'>
-              <ScrollView
-                scrollY
-                scrollIntoView=''
-                className='myshop-order-main-left'
-              >
+              <ScrollView scrollY className='myshop-order-main-left'>
                 {goods.map((good, i) => {
                   return (
                     <LeftBar

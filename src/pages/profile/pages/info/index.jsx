@@ -52,7 +52,7 @@ const ProfileInfo = () => {
 
     result &&
       Taro.uploadFile({
-        url: 'http://localhost:4000/api/uploadHead',
+        url: 'http://192.168.1.106:4000/api/uploadHead',
         filePath: result.tempFilePaths[0],
         name: 'head',
         formData: {
@@ -64,6 +64,9 @@ const ProfileInfo = () => {
         success() {
           // 重新读取用户信息
           getUserInfo()
+        },
+        fail(err) {
+          console.log(err)
         },
       })
   }

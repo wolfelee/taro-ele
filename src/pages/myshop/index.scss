@@ -4,6 +4,7 @@
 }
 .myshop {
   height: 100vh;
+  -webkit-overflow-scrolling: touch; //ios不流畅问题
   .myshop-top {
     .myshop-top-bg {
       position: relative;
@@ -50,7 +51,7 @@
         .myshop-logo-img {
           width: 150px;
           height: 150px;
-          box-shadow: 0 0 4px 0 rgba(0, 0, 0, .2);
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
         }
       }
 
@@ -167,7 +168,6 @@
         .myshop-order-recommend-main {
           margin-top: 20px;
           white-space: nowrap;
-
           -webkit-overflow-scrolling: touch; //ios不流畅问题
         }
       }
@@ -181,11 +181,13 @@
         .myshop-order-main-left {
           width: 150px;
           height: 100%;
+          -webkit-overflow-scrolling: touch; //ios不流畅问题
         }
         .myshop-order-main-right {
           width: 550px;
           height: 100%;
           margin-left: 20px;
+          -webkit-overflow-scrolling: touch; //ios不流畅问题
 
           .myshop-order-main-right-block {
             .myshop-order-main-right-title {

@@ -18,6 +18,7 @@ export default {
     'pages/login/index',
     'pages/register/index',
     'pages/search/index',
+    'pages/test/index',
   ],
   window: {
     backgroundTextStyle: 'light',

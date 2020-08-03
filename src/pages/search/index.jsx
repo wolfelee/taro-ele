@@ -145,7 +145,7 @@ const Search = () => {
         </View>
       ) : (
         <>
-          {historyList.length > 0 && (
+          {!!historyList.length && (
             <Back
               title='搜索历史'
               clear
@@ -154,7 +154,7 @@ const Search = () => {
               onTypeaHead={typeaHead}
             />
           )}
-          {hotList.length > 0 && (
+          {!!hotList.length  && (
             <Back title='热门搜索' dataList={hotList} onTypeaHead={typeaHead} />
           )}
         </>

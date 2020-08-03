@@ -1,6 +1,5 @@
 import Taro from '@tarojs/taro'
 import {
-  USER,
   USERADDRESS,
   SETUSERADDRESS,
   REMOVEUSERADDRESS,
@@ -19,17 +18,6 @@ const token = (state = initToken, action) => {
       return payload
     case REMOVETOKEN:
       return ''
-    default:
-      return state
-  }
-}
-
-const initUser = {}
-const user = (state = initUser, action) => {
-  const { type, payload } = action
-  switch (type) {
-    case USER:
-      return state
     default:
       return state
   }
@@ -100,7 +88,6 @@ const userAddress = (state = initUserAddress, action) => {
 
 export default {
   token,
-  user,
   userAddressList,
   userAddress,
   currentAddress,

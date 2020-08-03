@@ -1,5 +1,6 @@
 // 左侧列表
 .selectcity-main-content-city {
+  -webkit-overflow-scrolling: touch; //ios不流畅问题
   height: calc(100vh - 200px);
   .selectcity-main-content-city-item {
     .selectcity-main-content-city-a {
