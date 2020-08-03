@@ -146,12 +146,12 @@ const Msite = () => {
         }
         setBottomFlag(true)
         // 计算top值
-        _getOptionsTop()
+        initTop || _getOptionsTop()
       } else {
         console.log(result)
       }
     }
-  }, [isLogin, shopParams, currentAddress, offset, isMore])
+  }, [isLogin, shopParams, currentAddress, offset, isMore, initTop])
 
   // 清空offset 没用更多提示
   const removeOffset = () => {
@@ -176,6 +176,7 @@ const Msite = () => {
     Taro.redirectTo({ url: '/pages/login/index' })
   }
 
+  // #filtershops 计算top值
   const _getOptionsTop = async () => {
     const result = await getDom('#filtershops')
     const domTop = result[0][0].top
@@ -194,7 +195,6 @@ const Msite = () => {
   // 设置滚动条位置和禁止滚动,每次要不同值否则无效,
   const onFilterTop = () => {
     const myInitTop = initTop + 0.1
-    console.log(myInitTop)
     if (initTop === top) {
       setTop(myInitTop)
     } else {
@@ -216,7 +216,6 @@ const Msite = () => {
         }
       }, 0)
     }
-
     setWeiScroll(flag)
   }
 
