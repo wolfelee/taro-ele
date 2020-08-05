@@ -18,10 +18,9 @@ const SelectCityFilterList = ({ cityValue, resultCityList, onSelectCity }) => {
           </View>
         )
       })}
-
       <View
         className={classnames('result-city-null', {
-          hide: resultCityList.length > 0 || cityValue,
+          'ele-hide': resultCityList.length > 0 ,
         })}
       >
         无结果

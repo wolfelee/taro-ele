@@ -1,68 +1,77 @@
-# Taro3.0 仿饿了么 开发 h5 及微信小程序 跨端
+# Taro3.0 仿饿了么 h5 微信小程序(Hooks)
 
-> 编译预览:
+![](https://img.shields.io/badge/Taro-3.0.5-blue.svg)
+![](https://img.shields.io/badge/react-16.10.0-green.svg)
+![](https://img.shields.io/badge/redux-4.0.0-brightgreen.svg)
+![](https://img.shields.io/badge/redux--thunk-2.3.0-yellow.svg)
+![](https://img.shields.io/badge/dayjs-1.8.29-green.svg)
+![](https://img.shields.io/badge/lodash-4.17.19-003366.svg)
+![](https://img.shields.io/badge/tua--body--scroll--lock-1.1.0-orange.svg)
+
+# 项目运行
+
+`node (>=8.0.0)`
+> 前端 Taro
+```
+  git clone github.com/qingjuesama/taro-ele.git
+  cd taro-ele
+  npm install 或 cnpm 或 yarn
+
+  H5端 端口3000
+  npm run dev:h5 或 yanr dev:h5
+
+  微信小程序端 
+  npm run dev:weapp 或 yanr dev:h5
+  
+  其他:
+  账号:13333333333
+  密码:123456
+  地址: http://localhost:3000
+```
+
+>[后端 Egg](https://github.com/qingjuesama/taro-ele-serve)
 
 ```
-npm run dev:h5
-npm run dev:weapp
+端口:4000
+
+git clone github.com/qingjuesama/taro-ele-serve.git
+cd taro-ele-serve
+npm install 或 cnpm 或 yarn
+
+npm run dev 或  yarn dev
 ```
 
-> 打包
+# 说明
 
-```
-npm run build:h5
-npm run build:weapp
-```
+<b>前端:</b> React Hooks语法<br>
+  使用京东`Taro`跨端框架 `React`语法,可以直接编译`H5`和`微信小程序`,这个主要是学习的一个项目包含`18`个页面! 基本还原了饿了么`H5`端效果,定位使用的是`IP`定位,`GPS`需要`Https`,注册,登录,上传头像,修改密码,购物车等等
+<br><br>
+<b>后端:</b><br>
+主要做代理,部分数据直接采用饿了么源数据,其他数据保存本地JSON文件,无需数据库!
 
-> 说明:
-> 部分数据使用 ele 源数据,使用 eggjs 反向代理 [ele-serve](https://github.com/qingjuesama/taro-ele-serve) 采取 fs 本地保存 json
+>源码在src下,其他请自行研究,如果对你有帮助,请点右上角的`Star`支持一下 感谢!
 
-### 首页
+# 技术栈
 
-用户定位, 快捷导航, 选择收货地址, 选择城市
+Taro3.0  React16  redux  lodash  sass  
 
-### 导航商家列表
 
-分类, 综合排序, 距离最近, 销量最高, 筛选
+# 效果展示
 
-### 商家详情
+<img src="https://s1.ax1x.com/2020/08/05/arFmQO.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFeSK.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFuOe.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFEJx.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFnyD.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFVW6.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFQwd.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFYSf.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFUOg.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFMeH.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arF3FI.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arF8Yt.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFlTA.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFGfP.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFN6S.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFtl8.gif" width="187" height="333"/>&#160;
 
-- 点餐
-  商家推荐, 商品列表左右联动,
-- 评价
-  商家评分 , 评价(全部, 最新, 好评, 差评, 有图)
-- 商家
-  配送信息, 商家服务, 商家实景, 商家信息
-- 购物车
-
-### 结算
-
-- 选择地址
-
-### 搜索
-
-搜索历史, 热门搜索, 搜索结果
-
-### 发现
-
-推荐项目, 限时好礼
-
-### 订单
-
-- 订单列表
-  登录验证, 无订单, 有订单
-- 订单详情
-
-### 我的
-
-- 用户信息
-  上传/修改头像, 修改用户名, 修改登录密码, 退出登录
-
-- 我的地址
-  - 增加用户地址
-  - 删除用户地址
-  - 修改用户地址
-
-### 登录
-
-### 注册
