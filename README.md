@@ -21,12 +21,12 @@
   npm run dev:h5 或 yanr dev:h5
 
   微信小程序端 
-  npm run dev:weapp 或 yanr dev:h5
+  npm run dev:weapp 或 yanr dev:weapp
   
   其他:
   账号:13333333333
   密码:123456
-  地址: http://localhost:3000
+  地址:http://localhost:3000
 ```
 
 >[后端 Egg](https://github.com/qingjuesama/taro-ele-serve)
@@ -58,20 +58,20 @@ Taro3.0  React16  redux  lodash  sass
 
 # 效果展示
 
-<img src="https://s1.ax1x.com/2020/08/05/arFmQO.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFeSK.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFuOe.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFEJx.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFnyD.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFVW6.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFQwd.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFYSf.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFUOg.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFMeH.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arF3FI.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arF8Yt.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFlTA.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFGfP.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFN6S.gif" width="187" height="333"/>&#160;
-<img src="https://s1.ax1x.com/2020/08/05/arFtl8.gif" width="187" height="333"/>&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFmQO.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFeSK.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFuOe.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFEJx.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFnyD.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFVW6.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFQwd.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFYSf.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFUOg.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFMeH.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arF3FI.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arF8Yt.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFlTA.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFGfP.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFN6S.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
+<img src="https://s1.ax1x.com/2020/08/05/arFtl8.gif" width="375" height="667"/>&#160;&#160;&#160;&#160;&#160;&#160;
 

@@ -7,7 +7,7 @@ let BASEURL
 if (process.env.TARO_ENV === 'h5') {
   BASEURL = '/api'
 } else if (process.env.TARO_ENV === 'weapp') {
-  BASEURL = 'http://192.168.1.106:4000/api'
+  BASEURL = 'http://localhost:4000/api'
 }
 
 const store = configStore()
